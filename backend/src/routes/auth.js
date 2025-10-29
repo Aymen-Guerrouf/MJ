@@ -4,7 +4,12 @@ const rateLimit = require('express-rate-limit');
 const User = require('../models/User');
 const config = require('../config');
 const { authenticate } = require('../middleware/auth');
-const { registerValidation, loginValidation, validate } = require('../middleware/validator');
+const {
+  registerValidation,
+  loginValidation,
+  validate,
+  updatePasswordValidation,
+} = require('../middleware/validator');
 
 const router = express.Router();
 
@@ -70,7 +75,7 @@ router.post('/register', authLimiter, registerValidation, validate, async (req, 
 
     // Generate token
     const token = jwt.sign(
-      { 
+      {
         userId: user._id,
         tokenVersion: user.tokenVersion,
       },
@@ -125,7 +130,7 @@ router.post('/login', authLimiter, loginValidation, validate, async (req, res, n
 
     // Find user and include password field
     const user = await User.findOne({ email }).select('+password');
-    
+
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -135,7 +140,7 @@ router.post('/login', authLimiter, loginValidation, validate, async (req, res, n
 
     // Check password
     const isPasswordValid = await user.comparePassword(password);
-    
+
     if (!isPasswordValid) {
       return res.status(401).json({
         success: false,
@@ -145,7 +150,7 @@ router.post('/login', authLimiter, loginValidation, validate, async (req, res, n
 
     // Generate token
     const token = jwt.sign(
-      { 
+      {
         userId: user._id,
         tokenVersion: user.tokenVersion,
       },
@@ -206,7 +211,7 @@ router.post('/logout', authenticate, async (req, res, next) => {
   try {
     // Increment token version to invalidate all existing tokens
     await req.user.incrementTokenVersion();
-    
+
     res.json({
       success: true,
       message: 'Logout successful. All tokens have been invalidated.',
@@ -215,5 +220,85 @@ router.post('/logout', authenticate, async (req, res, next) => {
     next(error);
   }
 });
+
+/**
+ * @swagger
+ * /api/auth/update-password:
+ *   put:
+ *     summary: Update user password
+ *     tags: [Auth]
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - currentPassword
+ *               - newPassword
+ *               - confirmPassword
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *                 minLength: 6
+ *               confirmPassword:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Password updated successfully
+ *       400:
+ *         description: Validation error or incorrect current password
+ *       401:
+ *         description: Not authenticated
+ */
+router.put(
+  '/update-password',
+  authenticate,
+  updatePasswordValidation,
+  validate,
+  async (req, res, next) => {
+    try {
+      const { currentPassword, newPassword } = req.body;
+
+      // Get user with password field
+      const user = await User.findById(req.user._id).select('+password');
+
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: 'User not found',
+        });
+      }
+
+      // Verify current password
+      const isPasswordValid = await user.comparePassword(currentPassword);
+
+      if (!isPasswordValid) {
+        return res.status(400).json({
+          success: false,
+          message: 'Current password is incorrect',
+        });
+      }
+
+      // Update password
+      user.password = newPassword;
+      await user.save();
+
+      // Increment token version to invalidate all existing tokens
+      await user.incrementTokenVersion();
+
+      res.json({
+        success: true,
+        message: 'Password updated successfully. Please login again with your new password.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 module.exports = router;
