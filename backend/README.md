@@ -2,9 +2,12 @@
 
 A production-ready Express.js API template with authentication, security, logging, and API documentation built for rapid hackathon development.
 
+**Now using ES6 modules (import/export)** for modern JavaScript development.
+
 ## ✨ Features
 
 - **🔐 JWT Authentication**: Secure user registration/login with bcrypt hashing and token-based auth
+- **🔑 Password Management**: Update password, forgot password with email tokens (10-min expiry), reset password
 - **📚 API Documentation**: Auto-generated Swagger/OpenAPI docs at `/api-docs`
 - **🛡️ Security**: Helmet, CORS, rate limiting, MongoDB sanitization
 - **📝 Logging**: Structured JSON logging with Pino (pretty-print in dev)
@@ -12,6 +15,7 @@ A production-ready Express.js API template with authentication, security, loggin
 - **🔄 Hot Reload**: Nodemon for development
 - **⚡ Performance**: Compression, optimized MongoDB connection
 - **🌍 Production-Ready**: Error handling, graceful shutdown, 12-factor config
+- **📦 ES6 Modules**: Modern `import/export` syntax throughout
 
 ## 🚀 Quick Start
 
@@ -44,6 +48,7 @@ npm start
 ```
 
 The API will be available at:
+
 - **API**: http://localhost:3000/api
 - **Docs**: http://localhost:3000/api-docs
 - **Health**: http://localhost:3000/api/health
@@ -51,19 +56,22 @@ The API will be available at:
 ## 📁 Project Structure
 
 ```
-MSJ/
+backend/
 ├── src/
 │   ├── config/           # Configuration and setup
 │   │   ├── index.js      # Centralized config from env
 │   │   ├── database.js   # MongoDB connection
-│   │   └── logger.js     # Pino logger setup
+│   │   ├── logger.js     # Pino logger setup
+│   │   └── email.js      # Email service with templates
+│   ├── controllers/      # Business logic layer
+│   │   └── authController.js  # Auth business logic
 │   ├── models/           # Mongoose models
 │   │   └── User.js       # User model with auth methods
 │   ├── middleware/       # Express middleware
 │   │   ├── auth.js       # JWT authentication
 │   │   ├── errorHandler.js  # Global error handler
 │   │   └── validator.js  # Input validation rules
-│   ├── routes/           # API routes
+│   ├── routes/           # API routes (thin layer)
 │   │   ├── index.js      # Route aggregator
 │   │   ├── auth.js       # Auth endpoints
 │   │   └── health.js     # Health check
@@ -82,23 +90,27 @@ MSJ/
 
 ### Authentication
 
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| POST | `/api/auth/register` | Register new user | No |
-| POST | `/api/auth/login` | Login user | No |
-| GET | `/api/auth/me` | Get current user | Yes |
-| POST | `/api/auth/logout` | Logout (invalidate tokens) | Yes |
+| Method | Endpoint                    | Description                | Auth Required |
+| ------ | --------------------------- | -------------------------- | ------------- |
+| POST   | `/api/auth/register`        | Register new user          | No            |
+| POST   | `/api/auth/login`           | Login user                 | No            |
+| GET    | `/api/auth/me`              | Get current user           | Yes           |
+| POST   | `/api/auth/logout`          | Logout (invalidate tokens) | Yes           |
+| PUT    | `/api/auth/update-password` | Update password            | Yes           |
+| POST   | `/api/auth/forgot-password` | Request password reset     | No            |
+| POST   | `/api/auth/reset-password`  | Reset password with token  | No            |
 
 ### System
 
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| GET | `/api/health` | Health check | No |
-| GET | `/api-docs` | Interactive API docs | No |
+| Method | Endpoint      | Description          | Auth Required |
+| ------ | ------------- | -------------------- | ------------- |
+| GET    | `/api/health` | Health check         | No            |
+| GET    | `/api-docs`   | Interactive API docs | No            |
 
 ### Example Requests
 
 #### Register User
+
 ```bash
 curl -X POST http://localhost:3000/api/auth/register \
   -H "Content-Type: application/json" \
@@ -110,6 +122,7 @@ curl -X POST http://localhost:3000/api/auth/register \
 ```
 
 #### Login
+
 ```bash
 curl -X POST http://localhost:3000/api/auth/login \
   -H "Content-Type: application/json" \
@@ -120,6 +133,7 @@ curl -X POST http://localhost:3000/api/auth/login \
 ```
 
 #### Get Profile (Authenticated)
+
 ```bash
 curl http://localhost:3000/api/auth/me \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -156,6 +170,7 @@ LOG_LEVEL=info
 ## 🗄️ MongoDB Setup
 
 ### Local MongoDB
+
 ```bash
 # Install MongoDB locally or use Docker
 docker run -d -p 27017:27017 --name mongodb mongo:latest
@@ -180,10 +195,13 @@ mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/msj-hackathon?ret
 // src/models/YourModel.js
 const mongoose = require('mongoose');
 
-const schema = new mongoose.Schema({
-  name: { type: String, required: true },
-  // ... fields
-}, { timestamps: true });
+const schema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    // ... fields
+  },
+  { timestamps: true }
+);
 
 module.exports = mongoose.model('YourModel', schema);
 ```
@@ -266,12 +284,14 @@ The User model includes `tokenVersion` field for refresh token rotation. To impl
 ## 🤝 Team Collaboration
 
 ### For Backend Developers
+
 - Main logic in `src/routes/`
 - Models in `src/models/`
 - Use provided middleware for auth
 - Add Swagger docs to new endpoints
 
 ### For Frontend Developers
+
 1. Get API URL and `/api-docs` link
 2. Register user → get token
 3. Include token in headers: `Authorization: Bearer <token>`

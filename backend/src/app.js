@@ -1,15 +1,15 @@
-const express = require('express');
-const helmet = require('helmet');
-const cors = require('cors');
-const compression = require('compression');
-const rateLimit = require('express-rate-limit');
-const mongoSanitize = require('express-mongo-sanitize');
-const pinoHttp = require('pino-http');
-const config = require('./config');
-const logger = require('./config/logger');
-const routes = require('./routes');
-const setupSwagger = require('./docs/swagger');
-const { errorHandler, notFound } = require('./middleware/errorHandler');
+import express from 'express';
+import helmet from 'helmet';
+import cors from 'cors';
+import compression from 'compression';
+import rateLimit from 'express-rate-limit';
+import mongoSanitize from 'express-mongo-sanitize';
+import pinoHttp from 'pino-http';
+import config from './config/index.js';
+import logger from './config/logger.config.js';
+import routes from './routes/index.js';
+import setupSwagger from './docs/swagger.config.js';
+import { errorHandler, notFound } from './middleware/errorHandler.middleware.js';
 
 const app = express();
 
@@ -67,4 +67,4 @@ app.use(notFound);
 // Global error handler (must be last)
 app.use(errorHandler);
 
-module.exports = app;
+export default app;

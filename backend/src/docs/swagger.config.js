@@ -1,6 +1,6 @@
-const swaggerJsdoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
-const config = require('../config');
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
+import config from '../config/index.js';
 
 const options = {
   definition: {
@@ -98,11 +98,15 @@ const swaggerSpec = swaggerJsdoc(options);
 
 const setupSwagger = (app) => {
   // Swagger UI
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-    explorer: true,
-    customCss: '.swagger-ui .topbar { display: none }',
-    customSiteTitle: 'MSJ API Docs',
-  }));
+  app.use(
+    '/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpec, {
+      explorer: true,
+      customCss: '.swagger-ui .topbar { display: none }',
+      customSiteTitle: 'MSJ API Docs',
+    })
+  );
 
   // Swagger JSON
   app.get('/api-docs.json', (req, res) => {
@@ -111,4 +115,4 @@ const setupSwagger = (app) => {
   });
 };
 
-module.exports = setupSwagger;
+export default setupSwagger;

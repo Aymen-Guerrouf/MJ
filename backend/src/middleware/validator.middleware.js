@@ -1,4 +1,4 @@
-const { body, validationResult } = require('express-validator');
+import { body, validationResult } from 'express-validator';
 
 /**
  * Middleware to handle validation results
@@ -55,9 +55,29 @@ const updatePasswordValidation = [
     .withMessage('Password confirmation does not match'),
 ];
 
-module.exports = {
+/**
+ * Validation rules for forgot password
+ */
+const forgotPasswordValidation = [
+  body('email').isEmail().normalizeEmail().withMessage('Please provide a valid email'),
+];
+
+/**
+ * Validation rules for reset password
+ */
+const resetPasswordValidation = [
+  body('token').notEmpty().withMessage('Reset token is required'),
+  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+  body('confirmPassword')
+    .custom((value, { req }) => value === req.body.password)
+    .withMessage('Password confirmation does not match'),
+];
+
+export {
   validate,
   registerValidation,
   loginValidation,
   updatePasswordValidation,
+  forgotPasswordValidation,
+  resetPasswordValidation,
 };

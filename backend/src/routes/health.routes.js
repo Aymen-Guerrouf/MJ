@@ -1,5 +1,5 @@
-const express = require('express');
-const { getConnectionStatus } = require('../config/database');
+import express from 'express';
+import { getConnectionStatus } from '../config/database.config.js';
 
 const router = express.Router();
 
@@ -15,7 +15,7 @@ const router = express.Router();
  */
 router.get('/', (req, res) => {
   const dbStatus = getConnectionStatus();
-  
+
   res.json({
     success: true,
     message: 'Service is running',
@@ -29,4 +29,4 @@ router.get('/', (req, res) => {
   });
 });
 
-module.exports = router;
+export default router;

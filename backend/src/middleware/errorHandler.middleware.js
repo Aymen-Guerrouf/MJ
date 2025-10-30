@@ -1,11 +1,11 @@
-const logger = require('../config/logger');
-const config = require('../config');
+import logger from '../config/logger.config.js';
+import config from '../config/index.js';
 
 /**
  * Global error handler middleware
  * Must be defined after all other middleware and routes
  */
-const errorHandler = (err, req, res, next) => {
+const errorHandler = (err, req, res, _next) => {
   // Log error
   logger.error(
     {
@@ -81,4 +81,4 @@ const notFound = (req, res) => {
   });
 };
 
-module.exports = { errorHandler, notFound };
+export { errorHandler, notFound };

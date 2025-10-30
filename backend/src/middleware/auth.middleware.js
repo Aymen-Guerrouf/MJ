@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken');
-const config = require('../config');
-const User = require('../models/User');
-const logger = require('../config/logger');
+import jwt from 'jsonwebtoken';
+import config from '../config/index.js';
+import User from '../models/user.model.js';
+import logger from '../config/logger.config.js';
 
 /**
  * Middleware to verify JWT token
@@ -10,7 +10,7 @@ const authenticate = async (req, res, next) => {
   try {
     // Get token from header
     const authHeader = req.headers.authorization;
-    
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({
         success: false,
@@ -25,7 +25,7 @@ const authenticate = async (req, res, next) => {
 
     // Check if user still exists
     const user = await User.findById(decoded.userId);
-    
+
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -44,7 +44,7 @@ const authenticate = async (req, res, next) => {
     // Attach user to request
     req.user = user;
     req.userId = decoded.userId;
-    
+
     next();
   } catch (error) {
     if (error.name === 'JsonWebTokenError') {
@@ -53,7 +53,7 @@ const authenticate = async (req, res, next) => {
         message: 'Invalid token',
       });
     }
-    
+
     if (error.name === 'TokenExpiredError') {
       return res.status(401).json({
         success: false,
@@ -92,4 +92,4 @@ const authorize = (...roles) => {
   };
 };
 
-module.exports = { authenticate, authorize };
+export { authenticate, authorize };

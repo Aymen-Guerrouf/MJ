@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const logger = require('./logger');
-const config = require('./index');
+import mongoose from 'mongoose';
+import logger from './logger.config.js';
+import config from './index.js';
 
 let isConnected = false;
 
@@ -18,10 +18,13 @@ const connectDB = async () => {
     });
 
     isConnected = true;
-    logger.info({
-      host: conn.connection.host,
-      name: conn.connection.name,
-    }, 'MongoDB connected successfully');
+    logger.info(
+      {
+        host: conn.connection.host,
+        name: conn.connection.name,
+      },
+      'MongoDB connected successfully'
+    );
 
     // Handle connection events
     mongoose.connection.on('error', (err) => {
@@ -45,7 +48,6 @@ const connectDB = async () => {
       logger.info('MongoDB connection closed through app termination');
       process.exit(0);
     });
-
   } catch (error) {
     logger.error({ err: error }, 'MongoDB connection failed');
     isConnected = false;
@@ -55,4 +57,4 @@ const connectDB = async () => {
 
 const getConnectionStatus = () => isConnected;
 
-module.exports = { connectDB, getConnectionStatus };
+export { connectDB, getConnectionStatus };
