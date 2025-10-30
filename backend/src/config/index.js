@@ -22,11 +22,11 @@ const config = {
   // CORS
   cors: {
     origin:
-      process.env.CORS_ORIGIN === '*'
-        ? '*' // Allow all origins (for development and mobile)
-        : process.env.CORS_ORIGIN
+      process.env.NODE_ENV === 'production'
+        ? process.env.CORS_ORIGIN
           ? process.env.CORS_ORIGIN.split(',')
-          : ['http://localhost:3000', 'http://localhost:3001'],
+          : false
+        : true, // Allow all origins in development
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
