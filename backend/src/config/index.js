@@ -18,7 +18,9 @@ const config = {
     refreshSecret: process.env.JWT_REFRESH_SECRET,
     refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
   },
-
+  cookie: {
+    expiresIn: process.env.COOKIE_EXPIRES_IN || '7',
+  },
   // CORS
   cors: {
     origin:
