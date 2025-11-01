@@ -31,6 +31,28 @@ const userSchema = new mongoose.Schema(
       min: [13, 'Age must be at least 13'],
       max: [120, 'Age must be less than 120'],
     },
+    interests: [
+      {
+        type: String,
+        enum: [
+          'football',
+          'basketball',
+          'volleyball',
+          'chess',
+          'arts',
+          'music',
+          'theatre',
+          'coding',
+          'gaming',
+          'education',
+          'volunteering',
+          'culture',
+          'tech',
+          'health',
+          'other',
+        ],
+      },
+    ],
     // Token version for refresh token rotation - increment to invalidate all tokens
     tokenVersion: {
       type: Number,

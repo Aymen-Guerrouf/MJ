@@ -2,13 +2,20 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const WORKSHOP_CATEGORIES = [
-  'tech',
+  'football',
+  'basketball',
+  'volleyball',
+  'chess',
   'arts',
-  'language',
-  'skills',
+  'music',
+  'theatre',
+  'coding',
+  'gaming',
+  'education',
+  'volunteering',
+  'culture',
+  'tech',
   'health',
-  'business',
-  'science',
   'other',
 ];
 

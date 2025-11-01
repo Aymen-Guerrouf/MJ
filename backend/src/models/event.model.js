@@ -2,15 +2,20 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const EVENT_CATEGORIES = [
-  'sports',
-  'art',
-  'coding',
+  'football',
+  'basketball',
+  'volleyball',
+  'chess',
+  'arts',
   'music',
   'theatre',
+  'coding',
   'gaming',
   'education',
   'volunteering',
-  'chess',
+  'culture',
+  'tech',
+  'health',
   'other',
 ];
 
