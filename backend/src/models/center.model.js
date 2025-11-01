@@ -23,6 +23,11 @@ const centerSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    hasTour: {
+      type: Boolean,
+      default: false,
+    },
+
     latitude: {
       type: Number,
       required: false,

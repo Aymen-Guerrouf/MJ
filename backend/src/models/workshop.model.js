@@ -43,8 +43,7 @@ const workshopSchema = new Schema(
       enum: WORKSHOP_CATEGORIES,
     },
     mentorId: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
+      type: String,
       required: true,
     },
     price: {
@@ -55,17 +54,6 @@ const workshopSchema = new Schema(
     },
     image: {
       type: String,
-    },
-    seats: {
-      type: Number,
-      required: true,
-      min: 1,
-      default: 40,
-    },
-    bookedCount: {
-      type: Number,
-      default: 0,
-      min: 0,
     },
     status: {
       type: String,
@@ -80,18 +68,5 @@ const workshopSchema = new Schema(
   },
   { timestamps: true }
 );
-
-// Virtual for available seats
-workshopSchema.virtual('availableSeats').get(function () {
-  return this.seats - this.bookedCount;
-});
-
-// Ensure we can't overbook
-workshopSchema.pre('save', function (next) {
-  if (this.bookedCount > this.seats) {
-    next(new Error('Cannot book more seats than available'));
-  }
-  next();
-});
 
 export default mongoose.model('Workshop', workshopSchema);

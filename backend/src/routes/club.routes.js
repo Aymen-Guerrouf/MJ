@@ -110,9 +110,9 @@ router.post('/', authenticate, isCenterAdmin, createClub);
  *         description: Filter by category
  *     responses:
  *       200:
- *         description: List of clubs
+ *         description: List of all clubs
  */
-router.get('/', getAllClubs);
+router.get('/', authenticate, getAllClubs);
 
 /**
  * @swagger
@@ -148,7 +148,7 @@ router.get('/my', authenticate, getMyClubs);
  *       404:
  *         description: Club not found
  */
-router.get('/:id', getClubById);
+router.get('/:id', authenticate, getClubById);
 
 /**
  * @swagger

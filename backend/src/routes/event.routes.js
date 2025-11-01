@@ -27,7 +27,7 @@ const router = express.Router();
  *       200:
  *         description: List of all events
  */
-router.get('/', eventController.getAllEvents);
+router.get('/', authenticate, eventController.getAllEvents);
 
 /**
  * @swagger
@@ -47,7 +47,7 @@ router.get('/', eventController.getAllEvents);
  *       404:
  *         description: Event not found
  */
-router.get('/:id', eventController.getEventById);
+router.get('/:id', authenticate, eventController.getEventById);
 
 /**
  * @swagger

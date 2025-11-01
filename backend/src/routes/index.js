@@ -4,7 +4,9 @@ import healthRoutes from './health.routes.js';
 import centerRoutes from './center.routes.js';
 import eventRoutes from './event.routes.js';
 import workshopRoutes from './workshop.routes.js';
-import participationRoutes from './participation.routes.js';
+import eventRegistrationRoutes from './eventRegistration.routes.js';
+import workshopEnrollmentRoutes from './workshopEnrollment.routes.js';
+import clubMembershipRoutes from './clubMembership.routes.js';
 import clubRoutes from './club.routes.js';
 
 const router = express.Router();
@@ -15,7 +17,9 @@ router.use('/health', healthRoutes);
 router.use('/centers', centerRoutes);
 router.use('/events', eventRoutes);
 router.use('/workshops', workshopRoutes);
-router.use('/participations', participationRoutes);
+router.use('/event-registrations', eventRegistrationRoutes);
+router.use('/workshop-enrollments', workshopEnrollmentRoutes);
+router.use('/club-memberships', clubMembershipRoutes);
 router.use('/clubs', clubRoutes);
 
 export default router;

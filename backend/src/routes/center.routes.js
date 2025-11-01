@@ -27,7 +27,7 @@ const router = express.Router();
  *       200:
  *         description: List of all centers with optional related data
  */
-router.get('/', centerController.getAllCenters);
+router.get('/', authenticate, centerController.getAllCenters);
 
 /**
  * @swagger
@@ -52,7 +52,7 @@ router.get('/', centerController.getAllCenters);
  *       404:
  *         description: Center not found
  */
-router.get('/:id', centerController.getCenterById);
+router.get('/:id', authenticate, centerController.getCenterById);
 
 /**
  * @swagger

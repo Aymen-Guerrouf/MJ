@@ -139,9 +139,9 @@ router.post('/', authenticate, isCenterAdmin, createWorkshop);
  *         description: Filter by status
  *     responses:
  *       200:
- *         description: List of workshops
+ *         description: List of all workshops
  */
-router.get('/', getAllWorkshops);
+router.get('/', authenticate, getAllWorkshops);
 
 /**
  * @swagger
@@ -177,7 +177,7 @@ router.get('/my', authenticate, getMyWorkshops);
  *       404:
  *         description: Workshop not found
  */
-router.get('/:id', getWorkshopById);
+router.get('/:id', authenticate, getWorkshopById);
 
 /**
  * @swagger

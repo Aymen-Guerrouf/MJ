@@ -1,21 +1,16 @@
 import mongoose from 'mongoose';
 
-const participationSchema = new mongoose.Schema(
+const eventRegistrationSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     },
-    activityId: {
+    eventId: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: 'Event',
       required: true,
-      refPath: 'activityType',
-    },
-    activityType: {
-      type: String,
-      required: true,
-      enum: ['Event', 'Workshop'],
     },
     fullName: {
       type: String,
@@ -29,11 +24,6 @@ const participationSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    status: {
-      type: String,
-      enum: ['pending', 'confirmed', 'cancelled'],
-      default: 'confirmed',
-    },
   },
   {
     timestamps: true,
@@ -41,6 +31,6 @@ const participationSchema = new mongoose.Schema(
 );
 
 // Create compound index to prevent duplicate registrations
-participationSchema.index({ userId: 1, activityId: 1 }, { unique: true });
+eventRegistrationSchema.index({ userId: 1, eventId: 1 }, { unique: true });
 
-export default mongoose.model('Participation', participationSchema);
+export default mongoose.model('EventRegistration', eventRegistrationSchema);

@@ -47,12 +47,6 @@ const eventSchema = new Schema(
     image: {
       type: String,
     },
-
-    bookedCount: {
-      type: Number,
-      default: 0,
-      min: 0,
-    },
     status: {
       type: String,
       enum: ['open', 'closed'],
@@ -66,18 +60,5 @@ const eventSchema = new Schema(
   },
   { timestamps: true }
 );
-
-// Virtual for available seats
-eventSchema.virtual('availableSeats').get(function () {
-  return this.seats - this.bookedCount;
-});
-
-// Ensure we can't overbook
-eventSchema.pre('save', function (next) {
-  if (this.bookedCount > this.seats) {
-    next(new Error('Cannot book more seats than available'));
-  }
-  next();
-});
 
 export default mongoose.model('Event', eventSchema);

@@ -130,6 +130,31 @@ userSchema.methods.createEmailVerificationCode = function () {
   return verificationCode;
 };
 
+// Virtual populate for user's club memberships
+userSchema.virtual('myClubs', {
+  ref: 'ClubMembership',
+  localField: '_id',
+  foreignField: 'userId',
+});
+
+// Virtual populate for user's event registrations
+userSchema.virtual('myEvents', {
+  ref: 'EventRegistration',
+  localField: '_id',
+  foreignField: 'userId',
+});
+
+// Virtual populate for user's workshop enrollments
+userSchema.virtual('myWorkshops', {
+  ref: 'WorkshopEnrollment',
+  localField: '_id',
+  foreignField: 'userId',
+});
+
+// Enable virtuals in toJSON and toObject
+userSchema.set('toJSON', { virtuals: true });
+userSchema.set('toObject', { virtuals: true });
+
 // Remove sensitive data when converting to JSON
 userSchema.methods.toJSON = function () {
   const obj = this.toObject();
