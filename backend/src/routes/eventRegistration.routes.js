@@ -92,10 +92,6 @@ router.post('/', authenticate, eventRegistrationController.registerForEvent);
  *       200:
  *         description: Registration cancelled successfully
  */
-router.delete(
-  '/:id',
-  authenticate,
-  eventRegistrationController.deleteEventRegistration
-);
+router.delete('/:id', authenticate, eventRegistrationController.deleteEventRegistration);
 
 export default router;
