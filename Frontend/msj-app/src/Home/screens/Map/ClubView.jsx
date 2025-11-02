@@ -1,5 +1,5 @@
 // screens/Clubs/ClubView.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -36,6 +36,44 @@ export default function ClubView() {
   const [joinOpen, setJoinOpen] = useState(false);
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isMember, setIsMember] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
+
+  // Check if user is already a member when component mounts
+  useEffect(() => {
+    checkMembershipStatus();
+  }, [club?._id, club?.id]);
+
+  const checkMembershipStatus = async () => {
+    if (!club?._id && !club?.id) return;
+
+    try {
+      setIsChecking(true);
+      const response = await apiCall(API_ENDPOINTS.CLUBS.MY_MEMBERSHIPS);
+
+      if (response.ok) {
+        const data = await response.json();
+        const memberships = data.data?.memberships || [];
+
+        // Check if current club is in user's memberships
+        const clubId = club._id || club.id;
+        const membership = memberships.find(
+          (mem) =>
+            mem.clubId?._id === clubId ||
+            mem.clubId?.id === clubId ||
+            mem.clubId === clubId
+        );
+
+        if (membership) {
+          setIsMember(true);
+        }
+      }
+    } catch (error) {
+      console.log("Error checking membership status:", error);
+    } finally {
+      setIsChecking(false);
+    }
+  };
 
   if (!club) {
     return (
@@ -53,7 +91,6 @@ export default function ClubView() {
         method: "POST",
         body: JSON.stringify({
           clubId: club._id || club.id,
-          note,
         }),
       });
 
@@ -65,12 +102,10 @@ export default function ClubView() {
 
       setJoinOpen(false);
       setNote("");
-      Alert.alert(
-        "Request Sent",
-        "Your join request has been submitted successfully!"
-      );
+      setIsMember(true);
+      Alert.alert("Success", "You have successfully joined the club!");
     } catch (err) {
-      Alert.alert("Error", err?.message || "Failed to send request");
+      Alert.alert("Error", err?.message || "Failed to join club");
     } finally {
       setLoading(false);
     }
@@ -175,22 +210,32 @@ export default function ClubView() {
       </ScrollView>
 
       {/* Footer Join Button */}
-      <View style={styles.footer}>
-        <TouchableOpacity
-          onPress={() => setJoinOpen(true)}
-          style={styles.joinBtnWrap}
-          activeOpacity={0.9}
-        >
-          <LinearGradient
-            start={{ x: 0.15, y: 1 }}
-            end={{ x: 0.95, y: 0.1 }}
-            colors={[MINT, TEAL]}
-            style={styles.joinBtn}
+      {!isChecking && (
+        <View style={styles.footer}>
+          <TouchableOpacity
+            onPress={() => !isMember && setJoinOpen(true)}
+            style={styles.joinBtnWrap}
+            activeOpacity={0.9}
+            disabled={isMember}
           >
-            <Text style={styles.joinText}>JOIN CLUB</Text>
-          </LinearGradient>
-        </TouchableOpacity>
-      </View>
+            <LinearGradient
+              start={{ x: 0.15, y: 1 }}
+              end={{ x: 0.95, y: 0.1 }}
+              colors={isMember ? ["#4CAF50", "#45A049"] : [MINT, TEAL]}
+              style={styles.joinBtn}
+            >
+              {isMember ? (
+                <>
+                  <Ionicons name="checkmark-circle" size={20} color="#fff" />
+                  <Text style={styles.joinText}>MEMBER</Text>
+                </>
+              ) : (
+                <Text style={styles.joinText}>JOIN CLUB</Text>
+              )}
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
+      )}
 
       {/* Bottom sheet join form */}
       <Modal
@@ -206,18 +251,10 @@ export default function ClubView() {
         <View style={styles.sheet}>
           <View style={styles.sheetGrab} />
           <Text style={styles.sheetTitle}>Join {club.name}</Text>
-          <View style={styles.inputWrap}>
-            <Text style={styles.label}>Note (optional)</Text>
-            <TextInput
-              value={note}
-              onChangeText={setNote}
-              placeholder="Tell us a bit about your motivation"
-              placeholderTextColor="#8FA1AB"
-              style={styles.textArea}
-              multiline
-              numberOfLines={4}
-            />
-          </View>
+          <Text style={styles.sheetDescription}>
+            You will instantly become a member of this club and gain access to
+            all club activities and events.
+          </Text>
 
           <TouchableOpacity
             onPress={onSubmitJoin}
@@ -234,7 +271,7 @@ export default function ClubView() {
               {loading ? (
                 <ActivityIndicator color="#fff" />
               ) : (
-                <Text style={styles.submitText}>Send Request</Text>
+                <Text style={styles.submitText}>Join Now</Text>
               )}
             </LinearGradient>
           </TouchableOpacity>
@@ -375,6 +412,8 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     alignItems: "center",
     justifyContent: "center",
+    flexDirection: "row",
+    gap: 8,
   },
   joinText: {
     fontSize: 15,
@@ -406,6 +445,12 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     color: SLATE,
     marginBottom: 10,
+  },
+  sheetDescription: {
+    fontSize: 13,
+    color: "#7A8A9A",
+    lineHeight: 20,
+    marginBottom: 16,
   },
 
   inputWrap: { marginBottom: 12 },

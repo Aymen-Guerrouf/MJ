@@ -1,5 +1,5 @@
 // screens/Events/EventView.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -28,6 +28,41 @@ export default function EventView() {
 
   const [isRegistering, setIsRegistering] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
+
+  // Check if user is already registered when component mounts
+  useEffect(() => {
+    checkRegistrationStatus();
+  }, [event?._id, event?.id]);
+
+  const checkRegistrationStatus = async () => {
+    if (!event?._id && !event?.id) return;
+
+    try {
+      setIsChecking(true);
+      const response = await apiCall(API_ENDPOINTS.EVENTS.MY_REGISTRATIONS);
+
+      if (response.ok) {
+        const data = await response.json();
+        const registrations = data.data?.registrations || [];
+
+        // Check if current event is in user's registrations
+        const eventId = event._id || event.id;
+        const isAlreadyRegistered = registrations.some(
+          (reg) =>
+            reg.eventId?._id === eventId ||
+            reg.eventId?.id === eventId ||
+            reg.eventId === eventId
+        );
+
+        setIsRegistered(isAlreadyRegistered);
+      }
+    } catch (error) {
+      console.log("Error checking registration status:", error);
+    } finally {
+      setIsChecking(false);
+    }
+  };
 
   if (!event) {
     return (
@@ -184,35 +219,37 @@ export default function EventView() {
       </ScrollView>
 
       {/* Footer Button */}
-      <View style={styles.footer}>
-        <TouchableOpacity
-          style={[
-            styles.registerBtn,
-            (isRegistering || isRegistered) && styles.registerBtnDisabled,
-          ]}
-          onPress={handleRegister}
-          disabled={isRegistering || isRegistered}
-          activeOpacity={0.9}
-        >
-          <LinearGradient
-            start={{ x: 0.15, y: 1 }}
-            end={{ x: 0.95, y: 0.1 }}
-            colors={isRegistered ? ["#4CAF50", "#45A049"] : [MINT, TEAL]}
-            style={styles.registerBtnInner}
+      {!isChecking && (
+        <View style={styles.footer}>
+          <TouchableOpacity
+            style={[
+              styles.registerBtn,
+              (isRegistering || isRegistered) && styles.registerBtnDisabled,
+            ]}
+            onPress={handleRegister}
+            disabled={isRegistering || isRegistered}
+            activeOpacity={0.9}
           >
-            {isRegistered ? (
-              <>
-                <Ionicons name="checkmark-circle" size={20} color="#fff" />
-                <Text style={styles.registerBtnText}>Registered</Text>
-              </>
-            ) : (
-              <Text style={styles.registerBtnText}>
-                {isRegistering ? "Registering..." : "PARTICIPATE"}
-              </Text>
-            )}
-          </LinearGradient>
-        </TouchableOpacity>
-      </View>
+            <LinearGradient
+              start={{ x: 0.15, y: 1 }}
+              end={{ x: 0.95, y: 0.1 }}
+              colors={isRegistered ? ["#4CAF50", "#45A049"] : [MINT, TEAL]}
+              style={styles.registerBtnInner}
+            >
+              {isRegistered ? (
+                <>
+                  <Ionicons name="checkmark-circle" size={20} color="#fff" />
+                  <Text style={styles.registerBtnText}>Registered</Text>
+                </>
+              ) : (
+                <Text style={styles.registerBtnText}>
+                  {isRegistering ? "Registering..." : "PARTICIPATE"}
+                </Text>
+              )}
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 }

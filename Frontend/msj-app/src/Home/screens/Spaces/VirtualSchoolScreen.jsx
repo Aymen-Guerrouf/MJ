@@ -116,13 +116,6 @@ const VirtualSchoolScreen = ({ navigation }) => {
           <Ionicons name="play" size={32} color="white" />
         </View>
       </View>
-      {lesson.duration && (
-        <View style={styles.durationBadge}>
-          <Text style={styles.durationText}>
-            {formatDuration(lesson.duration)}
-          </Text>
-        </View>
-      )}
 
       <View style={styles.videoInfo}>
         <Text style={styles.videoTitle} numberOfLines={2}>
@@ -131,13 +124,6 @@ const VirtualSchoolScreen = ({ navigation }) => {
         <Text style={styles.videoDescription} numberOfLines={2}>
           {lesson.description || "No description"}
         </Text>
-
-        <View style={styles.videoMeta}>
-          <View style={styles.metaItem}>
-            <Ionicons name="eye-outline" size={14} color="#64748b" />
-            <Text style={styles.metaText}>{lesson.views || 0}</Text>
-          </View>
-        </View>
 
         <View style={styles.videoFooter}>
           {lesson.difficulty && (
@@ -228,7 +214,7 @@ const VirtualSchoolScreen = ({ navigation }) => {
       >
         {loading ? (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#6366f1" />
+            <ActivityIndicator size="large" color="#10b981" />
             <Text style={styles.loadingText}>Loading videos...</Text>
           </View>
         ) : filteredLessons.length === 0 ? (
@@ -319,8 +305,8 @@ const styles = StyleSheet.create({
     borderColor: "#e2e8f0",
   },
   activeCategoryChip: {
-    backgroundColor: "#6366f1",
-    borderColor: "#6366f1",
+    backgroundColor: "#10b981",
+    borderColor: "#10b981",
   },
   categoryChipText: {
     fontSize: 14,
@@ -380,7 +366,7 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: "rgba(99, 102, 241, 0.9)",
+    backgroundColor: "rgba(16, 185, 129, 0.9)",
     justifyContent: "center",
     alignItems: "center",
     shadowColor: "#000",
@@ -419,22 +405,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     lineHeight: 16,
   },
-  videoMeta: {
-    flexDirection: "row",
-    gap: 12,
-    marginBottom: 10,
-  },
-  metaItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-  },
-  metaText: {
-    fontSize: 12,
-    color: "#64748b",
-  },
   videoFooter: {
     flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 6,
+  },
+  difficultyBadge: {
     justifyContent: "space-between",
     alignItems: "center",
     gap: 6,

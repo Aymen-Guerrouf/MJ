@@ -60,18 +60,6 @@ const VideoPlayerScreen = ({ route, navigation }) => {
           <Text style={styles.headerTitle} numberOfLines={1}>
             {lesson.title}
           </Text>
-          <View style={styles.headerMeta}>
-            <View style={styles.metaItem}>
-              <Ionicons name="time-outline" size={14} color="#64748b" />
-              <Text style={styles.metaText}>
-                {formatDuration(lesson.duration)}
-              </Text>
-            </View>
-            <View style={styles.metaItem}>
-              <Ionicons name="eye-outline" size={14} color="#64748b" />
-              <Text style={styles.metaText}>{lesson.views} views</Text>
-            </View>
-          </View>
         </View>
       </View>
 
@@ -80,7 +68,7 @@ const VideoPlayerScreen = ({ route, navigation }) => {
         <View style={styles.videoContainer}>
           {isLoading && (
             <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color="#6366f1" />
+              <ActivityIndicator size="large" color="#10b981" />
               <Text style={styles.loadingText}>Loading video...</Text>
             </View>
           )}
@@ -162,24 +150,6 @@ const VideoPlayerScreen = ({ route, navigation }) => {
               ))}
             </View>
           )}
-
-          {/* Action Buttons */}
-          <View style={styles.actionsContainer}>
-            {lesson.likes && (
-              <TouchableOpacity style={styles.actionButton}>
-                <Ionicons name="heart-outline" size={24} color="#6366f1" />
-                <Text style={styles.actionText}>Like ({lesson.likes})</Text>
-              </TouchableOpacity>
-            )}
-            <TouchableOpacity style={styles.actionButton}>
-              <Ionicons name="bookmark-outline" size={24} color="#6366f1" />
-              <Text style={styles.actionText}>Save</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.actionButton}>
-              <Ionicons name="share-social-outline" size={24} color="#6366f1" />
-              <Text style={styles.actionText}>Share</Text>
-            </TouchableOpacity>
-          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -189,12 +159,12 @@ const VideoPlayerScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8fafc",
+    backgroundColor: "#ffffff",
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: "#ffffff",
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
@@ -215,19 +185,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#1e293b",
     marginBottom: 4,
-  },
-  headerMeta: {
-    flexDirection: "row",
-    gap: 16,
-  },
-  metaItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-  },
-  metaText: {
-    fontSize: 12,
-    color: "#64748b",
   },
   content: {
     flex: 1,
@@ -260,7 +217,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   infoContainer: {
-    backgroundColor: "white",
+    backgroundColor: "#ffffff",
     padding: 16,
   },
   categoryRow: {
@@ -270,7 +227,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   categoryBadge: {
-    backgroundColor: "#eff6ff",
+    backgroundColor: "#d1fae5",
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
@@ -278,7 +235,7 @@ const styles = StyleSheet.create({
   categoryText: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#6366f1",
+    color: "#059669",
   },
   difficultyBadge: {
     paddingHorizontal: 12,
@@ -305,34 +262,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 8,
-    marginBottom: 20,
+    marginBottom: 8,
   },
   tag: {
-    backgroundColor: "#f1f5f9",
+    backgroundColor: "#d1fae5",
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 12,
   },
   tagText: {
     fontSize: 12,
-    color: "#475569",
+    color: "#059669",
     fontWeight: "500",
-  },
-  actionsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    paddingTop: 16,
-    borderTopWidth: 1,
-    borderTopColor: "#e2e8f0",
-  },
-  actionButton: {
-    alignItems: "center",
-    gap: 6,
-  },
-  actionText: {
-    fontSize: 12,
-    color: "#6366f1",
-    fontWeight: "600",
   },
 });
 

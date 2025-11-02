@@ -21,6 +21,7 @@ import {
   StartupHubScreen,
   VideoPlayerScreen,
 } from "./screens/Spaces";
+import ExperienceStoryDetailScreen from "./screens/Spaces/ExperienceStoryDetailScreen";
 import Svg, {
   Path,
   Defs,
@@ -85,8 +86,12 @@ function SpacesStack() {
         name="SharingExperiences"
         component={SharingExperiencesScreen}
       />
+      <Stack.Screen
+        name="ExperienceStoryDetail"
+        component={ExperienceStoryDetailScreen}
+      />
       <Stack.Screen name="VirtualSchool" component={VirtualSchoolScreen} />
-      <Stack.Screen name="StartupHub" component={StartupHubScreen} />
+      {/* <Stack.Screen name="StartupHub" component={StartupHubScreen} /> */}
       <Stack.Screen name="VideoPlayer" component={VideoPlayerScreen} />
     </Stack.Navigator>
   );

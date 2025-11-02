@@ -1,5 +1,5 @@
 // screens/Events/WorkshopView.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -28,6 +28,41 @@ export default function WorkshopView() {
 
   const [isEnrolling, setIsEnrolling] = useState(false);
   const [isEnrolled, setIsEnrolled] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
+
+  // Check if user is already enrolled when component mounts
+  useEffect(() => {
+    checkEnrollmentStatus();
+  }, [workshop?._id, workshop?.id]);
+
+  const checkEnrollmentStatus = async () => {
+    if (!workshop?._id && !workshop?.id) return;
+
+    try {
+      setIsChecking(true);
+      const response = await apiCall(API_ENDPOINTS.WORKSHOPS.MY_ENROLLMENTS);
+
+      if (response.ok) {
+        const data = await response.json();
+        const enrollments = data.data?.enrollments || [];
+
+        // Check if current workshop is in user's enrollments
+        const workshopId = workshop._id || workshop.id;
+        const isAlreadyEnrolled = enrollments.some(
+          (enr) =>
+            enr.workshopId?._id === workshopId ||
+            enr.workshopId?.id === workshopId ||
+            enr.workshopId === workshopId
+        );
+
+        setIsEnrolled(isAlreadyEnrolled);
+      }
+    } catch (error) {
+      console.log("Error checking enrollment status:", error);
+    } finally {
+      setIsChecking(false);
+    }
+  };
 
   if (!workshop) {
     return (
@@ -65,9 +100,6 @@ export default function WorkshopView() {
         method: "POST",
         body: JSON.stringify({
           workshopId: workshop._id || workshop.id,
-          fullName: "User Name", // You should get this from user context/auth
-          phone: "0123456789", // You should get this from user context/auth
-          age: 25, // You should get this from user context/auth
         }),
       });
 
@@ -179,44 +211,46 @@ export default function WorkshopView() {
       </ScrollView>
 
       {/* Footer Button */}
-      <View style={styles.footer}>
-        <View style={styles.footerContent}>
-          <TouchableOpacity
-            style={[
-              styles.enrollBtn,
-              (isEnrolling || isEnrolled) && styles.enrollBtnDisabled,
-            ]}
-            onPress={handleEnroll}
-            disabled={isEnrolling || isEnrolled}
-            activeOpacity={0.9}
-          >
-            <LinearGradient
-              start={{ x: 0.15, y: 1 }}
-              end={{ x: 0.95, y: 0.1 }}
-              colors={isEnrolled ? ["#4CAF50", "#45A049"] : [MINT, TEAL]}
-              style={styles.enrollBtnInner}
+      {!isChecking && (
+        <View style={styles.footer}>
+          <View style={styles.footerContent}>
+            <TouchableOpacity
+              style={[
+                styles.enrollBtn,
+                (isEnrolling || isEnrolled) && styles.enrollBtnDisabled,
+              ]}
+              onPress={handleEnroll}
+              disabled={isEnrolling || isEnrolled}
+              activeOpacity={0.9}
             >
-              {isEnrolled ? (
-                <>
-                  <Ionicons name="checkmark-circle" size={20} color="#fff" />
-                  <Text style={styles.enrollBtnText}>Enrolled</Text>
-                </>
-              ) : (
-                <Text style={styles.enrollBtnText}>
-                  {isEnrolling ? "Enrolling..." : "PARTICIPATE"}
+              <LinearGradient
+                start={{ x: 0.15, y: 1 }}
+                end={{ x: 0.95, y: 0.1 }}
+                colors={isEnrolled ? ["#4CAF50", "#45A049"] : [MINT, TEAL]}
+                style={styles.enrollBtnInner}
+              >
+                {isEnrolled ? (
+                  <>
+                    <Ionicons name="checkmark-circle" size={20} color="#fff" />
+                    <Text style={styles.enrollBtnText}>Enrolled</Text>
+                  </>
+                ) : (
+                  <Text style={styles.enrollBtnText}>
+                    {isEnrolling ? "Enrolling..." : "PARTICIPATE"}
+                  </Text>
+                )}
+              </LinearGradient>
+            </TouchableOpacity>
+            {workshop.price !== undefined && (
+              <View style={styles.priceBox}>
+                <Text style={styles.priceLabel}>
+                  {workshop.price > 0 ? `${workshop.price} DZD` : "FREE"}
                 </Text>
-              )}
-            </LinearGradient>
-          </TouchableOpacity>
-          {workshop.price !== undefined && (
-            <View style={styles.priceBox}>
-              <Text style={styles.priceLabel}>
-                {workshop.price > 0 ? `${workshop.price} DZD` : "FREE"}
-              </Text>
-            </View>
-          )}
+              </View>
+            )}
+          </View>
         </View>
-      </View>
+      )}
     </View>
   );
 }

@@ -54,7 +54,7 @@ export const API_ENDPOINTS = {
   WORKSHOPS: {
     LIST: `${API_BASE_URL}/api/workshops`,
     ENROLL: `${API_BASE_URL}/api/workshop-enrollments`,
-    MY_ENROLLMENTS: `${API_BASE_URL}/api/`,
+    MY_ENROLLMENTS: `${API_BASE_URL}/api/workshop-enrollments/my`,
   },
   CLUBS: {
     LIST: `${API_BASE_URL}/api/clubs`,

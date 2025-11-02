@@ -347,11 +347,6 @@ const pinStyles = StyleSheet.create({
     backgroundColor: "#ffffff",
     padding: 3,
     borderRadius: 16,
-    shadowColor: "#000",
-    shadowOpacity: 0.18,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 3 },
-    elevation: 6,
   },
   badge: {
     backgroundColor: TEAL,

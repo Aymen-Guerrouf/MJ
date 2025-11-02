@@ -118,12 +118,8 @@ export default function AdminPanel({ navigation }) {
       formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
       formData.append("cloud_name", CLOUDINARY_CLOUD_NAME);
 
-      // Add video transformation parameters for mobile compatibility
-      if (resourceType === "video") {
-        formData.append("format", "mp4"); // Force MP4 format
-        formData.append("video_codec", "h264"); // H.264 codec for best compatibility
-        formData.append("audio_codec", "aac"); // AAC audio codec
-      }
+      // Note: format, video_codec, audio_codec are NOT allowed in unsigned uploads
+      // These transformations will be applied via URL transformation instead
 
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`,

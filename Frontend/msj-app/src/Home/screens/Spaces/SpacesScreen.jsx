@@ -19,7 +19,7 @@ const SpacesScreen = ({ navigation }) => {
       title: "Sharing Experiences",
       subtitle: "Listen & Learn from Others",
       icon: "people-outline",
-      gradient: ["#6366f1", "#8b5cf6"],
+      gradient: ["#10b981", "#059669", "#047857"],
       description: "Join seances and explore archives",
       screen: "SharingExperiences",
     },
@@ -28,7 +28,7 @@ const SpacesScreen = ({ navigation }) => {
       title: "Virtual School",
       subtitle: "Learn Through Videos",
       icon: "school-outline",
-      gradient: ["#ec4899", "#f43f5e"],
+      gradient: ["#1e293b", "#334155", "#475569"],
       description: "Watch educational content",
       screen: "VirtualSchool",
     },
@@ -37,14 +37,18 @@ const SpacesScreen = ({ navigation }) => {
       title: "Startup Hub",
       subtitle: "Build Your Dreams",
       icon: "rocket-outline",
-      gradient: ["#f59e0b", "#ef4444"],
+      gradient: ["#06b6d4", "#0891b2", "#0e7490"],
       description: "Resources for entrepreneurs",
       screen: "StartupHub",
     },
   ];
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.container}
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={styles.scrollContent}
+    >
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Spaces</Text>
         <Text style={styles.headerSubtitle}>
@@ -82,20 +86,6 @@ const SpacesScreen = ({ navigation }) => {
           </TouchableOpacity>
         ))}
       </View>
-
-      <View style={styles.infoSection}>
-        <View style={styles.infoCard}>
-          <Ionicons
-            name="information-circle-outline"
-            size={24}
-            color="#6366f1"
-          />
-          <Text style={styles.infoText}>
-            Each space offers unique opportunities for learning, growth, and
-            connection with other youth members.
-          </Text>
-        </View>
-      </View>
     </ScrollView>
   );
 };
@@ -104,6 +94,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f8fafc",
+  },
+  scrollContent: {
+    paddingBottom: 100,
   },
   header: {
     padding: 24,
@@ -163,29 +156,6 @@ const styles = StyleSheet.create({
   spaceDescription: {
     fontSize: 12,
     color: "rgba(255,255,255,0.7)",
-  },
-  infoSection: {
-    padding: 16,
-    marginTop: 8,
-  },
-  infoCard: {
-    flexDirection: "row",
-    backgroundColor: "white",
-    padding: 16,
-    borderRadius: 12,
-    alignItems: "flex-start",
-    gap: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  infoText: {
-    flex: 1,
-    fontSize: 14,
-    color: "#64748b",
-    lineHeight: 20,
   },
 });
 

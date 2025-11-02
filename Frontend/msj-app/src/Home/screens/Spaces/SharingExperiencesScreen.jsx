@@ -15,7 +15,7 @@ import { API_ENDPOINTS, apiCall } from "../../../config/api";
 
 const { width } = Dimensions.get("window");
 
-const SharingExperiencesScreen = () => {
+const SharingExperiencesScreen = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState("upcoming");
   const [upcomingSessions, setUpcomingSessions] = useState([]);
   const [pastSessions, setPastSessions] = useState([]);
@@ -106,7 +106,7 @@ const SharingExperiencesScreen = () => {
     <View key={session._id} style={styles.seanceCard}>
       <View style={styles.seanceHeader}>
         <View style={styles.dateTag}>
-          <Ionicons name="calendar-outline" size={14} color="#6366f1" />
+          <Ionicons name="calendar-outline" size={14} color="#6BAE97" />
           <Text style={styles.dateText}>{getDaysUntil(session.date)}</Text>
         </View>
         {session.tag && (
@@ -117,50 +117,50 @@ const SharingExperiencesScreen = () => {
       </View>
 
       <Text style={styles.seanceTitle}>{session.title}</Text>
+
+      {session.host && (
+        <View style={styles.hostContainer}>
+          <Ionicons name="person-circle-outline" size={18} color="#6BAE97" />
+          <Text style={styles.hostText}>{session.host}</Text>
+        </View>
+      )}
+
       {session.description && (
         <Text style={styles.seanceDescription}>{session.description}</Text>
       )}
 
       <View style={styles.detailsRow}>
         <View style={styles.detailItem}>
-          <Ionicons name="time-outline" size={16} color="#64748b" />
+          <Ionicons name="time-outline" size={16} color="#6BAE97" />
           <Text style={styles.detailText}>{session.time}</Text>
         </View>
         {session.centerId && (
           <View style={styles.detailItem}>
-            <Ionicons name="location-outline" size={16} color="#64748b" />
+            <Ionicons name="location-outline" size={16} color="#6BAE97" />
             <Text style={styles.detailText} numberOfLines={1}>
               {session.centerId.name || "Center"}
             </Text>
           </View>
         )}
       </View>
-
-      <View style={styles.seanceFooter}>
-        <Text style={styles.creatorText}>
-          By: {session.createdBy?.name || "Anonymous"}
-        </Text>
-        <TouchableOpacity style={styles.registerButton}>
-          <Text style={styles.registerButtonText}>Register</Text>
-          <Ionicons name="arrow-forward" size={16} color="white" />
-        </TouchableOpacity>
-      </View>
     </View>
   );
 
   const renderArchivedCard = (card) => (
-    <TouchableOpacity key={card._id} style={styles.archiveCard}>
+    <TouchableOpacity
+      key={card._id}
+      style={styles.archiveCard}
+      onPress={() => navigation.navigate("ExperienceStoryDetail", { card })}
+    >
       <View style={styles.archiveHeader}>
         <View style={styles.playButton}>
-          <Ionicons name="document-text" size={40} color="#6366f1" />
+          <Ionicons name="document-text" size={40} color="#6BAE97" />
         </View>
         <View style={styles.archiveInfo}>
           <Text style={styles.archiveTitle} numberOfLines={2}>
             {card.title}
           </Text>
-          <Text style={styles.archiveSpeaker}>
-            {card.createdBy?.name || "Anonymous"}
-          </Text>
+          {card.host && <Text style={styles.archiveHost}>{card.host}</Text>}
           <Text style={styles.archiveDate}>{formatDate(card.createdAt)}</Text>
         </View>
       </View>
@@ -168,15 +168,6 @@ const SharingExperiencesScreen = () => {
       <Text style={styles.archiveSummary} numberOfLines={3}>
         {card.summary}
       </Text>
-
-      {card.lessons && card.lessons.length > 0 && (
-        <View style={styles.lessonsPreview}>
-          <Ionicons name="bulb-outline" size={16} color="#6366f1" />
-          <Text style={styles.lessonsText}>
-            {card.lessons.length} key lessons
-          </Text>
-        </View>
-      )}
 
       {card.tag && (
         <View style={styles.tagsContainer}>
@@ -191,7 +182,7 @@ const SharingExperiencesScreen = () => {
   if (loading) {
     return (
       <View style={[styles.container, styles.centerContent]}>
-        <ActivityIndicator size="large" color="#6366f1" />
+        <ActivityIndicator size="large" color="#6BAE97" />
         <Text style={styles.loadingText}>Loading experiences...</Text>
       </View>
     );
@@ -214,7 +205,7 @@ const SharingExperiencesScreen = () => {
           <Ionicons
             name="calendar"
             size={20}
-            color={activeTab === "upcoming" ? "#6366f1" : "#64748b"}
+            color={activeTab === "upcoming" ? "#6BAE97" : "#64748b"}
           />
           <Text
             style={[
@@ -236,7 +227,7 @@ const SharingExperiencesScreen = () => {
           <Ionicons
             name="archive"
             size={20}
-            color={activeTab === "archive" ? "#6366f1" : "#64748b"}
+            color={activeTab === "archive" ? "#6BAE97" : "#64748b"}
           />
           <Text
             style={[
@@ -259,7 +250,8 @@ const SharingExperiencesScreen = () => {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            colors={["#6366f1"]}
+            colors={["#6BAE97"]}
+            tintColor="#6BAE97"
           />
         }
       >
@@ -269,7 +261,7 @@ const SharingExperiencesScreen = () => {
               upcomingSessions.map(renderUpcomingSession)
             ) : (
               <View style={styles.emptyState}>
-                <Ionicons name="calendar-outline" size={64} color="#cbd5e1" />
+                <Ionicons name="calendar-outline" size={64} color="#96D6C3" />
                 <Text style={styles.emptyStateTitle}>No Upcoming Sessions</Text>
                 <Text style={styles.emptyStateText}>
                   Check back later for new experience sharing sessions
@@ -280,7 +272,7 @@ const SharingExperiencesScreen = () => {
             cards.map(renderArchivedCard)
           ) : (
             <View style={styles.emptyState}>
-              <Ionicons name="archive-outline" size={64} color="#cbd5e1" />
+              <Ionicons name="archive-outline" size={64} color="#96D6C3" />
               <Text style={styles.emptyStateTitle}>No Archived Content</Text>
               <Text style={styles.emptyStateText}>
                 Past sessions and experience cards will appear here
@@ -301,7 +293,7 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: "white",
     padding: 24,
-    paddingTop: 40,
+    paddingTop: 60,
     borderBottomWidth: 1,
     borderBottomColor: "#e2e8f0",
   },
@@ -333,7 +325,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   activeTab: {
-    backgroundColor: "#eff6ff",
+    backgroundColor: "#E8F5F0",
   },
   tabText: {
     fontSize: 14,
@@ -341,7 +333,7 @@ const styles = StyleSheet.create({
     color: "#64748b",
   },
   activeTabText: {
-    color: "#6366f1",
+    color: "#6BAE97",
   },
   badge: {
     backgroundColor: "#e2e8f0",
@@ -359,27 +351,32 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 16,
+    paddingBottom: 140,
   },
   seanceCard: {
     backgroundColor: "white",
     borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
+    padding: 18,
+    marginBottom: 14,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.08,
     shadowRadius: 8,
     elevation: 3,
+    borderLeftWidth: 4,
+    borderLeftColor: "#6BAE97",
   },
   seanceHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 12,
+    marginBottom: 14,
+    flexWrap: "wrap",
+    gap: 8,
   },
   dateTag: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#eff6ff",
+    backgroundColor: "#E8F5F0",
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
@@ -388,12 +385,12 @@ const styles = StyleSheet.create({
   dateText: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#6366f1",
+    color: "#6BAE97",
   },
   spotsTag: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#d1fae5",
+    backgroundColor: "#E8F5F0",
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
@@ -402,19 +399,31 @@ const styles = StyleSheet.create({
   spotsText: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#10b981",
+    color: "#6BAE97",
   },
   seanceTitle: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#1e293b",
-    marginBottom: 8,
+    marginBottom: 10,
+    lineHeight: 28,
+  },
+  hostContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginBottom: 12,
+  },
+  hostText: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#475569",
   },
   seanceDescription: {
     fontSize: 14,
     color: "#64748b",
-    lineHeight: 20,
-    marginBottom: 16,
+    lineHeight: 22,
+    marginBottom: 14,
   },
   speakerContainer: {
     flexDirection: "row",
@@ -447,7 +456,8 @@ const styles = StyleSheet.create({
   detailsRow: {
     flexDirection: "row",
     gap: 16,
-    marginBottom: 16,
+    marginBottom: 0,
+    flexWrap: "wrap",
   },
   detailItem: {
     flexDirection: "row",
@@ -460,7 +470,7 @@ const styles = StyleSheet.create({
   },
   seanceFooter: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     alignItems: "center",
   },
   topicTag: {
@@ -475,7 +485,7 @@ const styles = StyleSheet.create({
   registerButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#6366f1",
+    backgroundColor: "#6BAE97",
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 8,
@@ -488,14 +498,16 @@ const styles = StyleSheet.create({
   },
   archiveCard: {
     backgroundColor: "white",
-    borderRadius: 12,
+    borderRadius: 14,
     padding: 16,
     marginBottom: 12,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
+    shadowOpacity: 0.06,
     shadowRadius: 4,
     elevation: 2,
+    borderLeftWidth: 3,
+    borderLeftColor: "#6BAE97",
   },
   archiveHeader: {
     flexDirection: "row",
@@ -514,15 +526,21 @@ const styles = StyleSheet.create({
     color: "#1e293b",
     marginBottom: 4,
   },
+  archiveHost: {
+    fontSize: 14,
+    color: "#6BAE97",
+    fontWeight: "600",
+    marginBottom: 2,
+  },
   archiveSpeaker: {
     fontSize: 14,
-    color: "#6366f1",
+    color: "#6BAE97",
     fontWeight: "600",
     marginBottom: 2,
   },
   archiveDate: {
     fontSize: 12,
-    color: "#94a3b8",
+    color: "#96D6C3",
   },
   viewsContainer: {
     flexDirection: "row",
@@ -536,7 +554,7 @@ const styles = StyleSheet.create({
   archiveSummary: {
     fontSize: 14,
     color: "#64748b",
-    lineHeight: 20,
+    lineHeight: 22,
     marginBottom: 12,
   },
   tagsContainer: {
@@ -545,14 +563,16 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   tag: {
-    backgroundColor: "#f1f5f9",
+    backgroundColor: "#E8F5F0",
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#96D6C3",
   },
   tagText: {
     fontSize: 11,
-    color: "#475569",
+    color: "#6BAE97",
     fontWeight: "500",
   },
   centerContent: {
@@ -565,35 +585,22 @@ const styles = StyleSheet.create({
     color: "#64748b",
   },
   topicTagHeader: {
-    backgroundColor: "#f3e8ff",
+    backgroundColor: "#fef3c7",
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#fde68a",
   },
   topicTagHeaderText: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#8b5cf6",
+    color: "#d97706",
   },
   creatorText: {
     fontSize: 13,
     color: "#64748b",
     fontStyle: "italic",
-  },
-  lessonsPreview: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#eff6ff",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-    gap: 6,
-    marginBottom: 12,
-  },
-  lessonsText: {
-    fontSize: 13,
-    color: "#6366f1",
-    fontWeight: "600",
   },
   emptyState: {
     alignItems: "center",
@@ -604,13 +611,13 @@ const styles = StyleSheet.create({
   emptyStateTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#475569",
+    color: "#2C7A5F",
     marginTop: 16,
     marginBottom: 8,
   },
   emptyStateText: {
     fontSize: 14,
-    color: "#94a3b8",
+    color: "#6BAE97",
     textAlign: "center",
     lineHeight: 20,
   },
