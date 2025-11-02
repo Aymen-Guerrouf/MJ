@@ -33,6 +33,9 @@ const clubSchema = new mongoose.Schema(
         'culture',
         'tech',
         'health',
+        'entrepreneurship',
+        'design',
+        'marketing',
         'other',
       ],
       required: true,
@@ -58,5 +61,9 @@ const clubSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// Add indexes for better query performance
+clubSchema.index({ centerId: 1, category: 1 }); // Most common query
+clubSchema.index({ category: 1, createdAt: -1 }); // Filter by category
 
 export default mongoose.model('Club', clubSchema);

@@ -8,7 +8,7 @@ const router = express.Router();
 /**
  * @swagger
  * tags:
- *   name: Workshop Enrollments
+ *   name: Participation
  *   description: Workshop enrollment management
  */
 
@@ -17,9 +17,9 @@ const router = express.Router();
  * /api/workshop-enrollments:
  *   get:
  *     summary: Get all workshop enrollments (Admin)
- *     tags: [Workshop Enrollments]
+ *     tags: [Participation]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
  *       - in: query
  *         name: workshopId
@@ -49,9 +49,9 @@ router.get(
  * /api/workshop-enrollments/my:
  *   get:
  *     summary: Get my workshop enrollments
- *     tags: [Workshop Enrollments]
+ *     tags: [Participation]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: List of my workshop enrollments
@@ -63,9 +63,9 @@ router.get('/my', authenticate, workshopEnrollmentController.getMyWorkshopEnroll
  * /api/workshop-enrollments:
  *   post:
  *     summary: Enroll in a workshop
- *     tags: [Workshop Enrollments]
+ *     tags: [Participation]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -97,9 +97,9 @@ router.post('/', authenticate, workshopEnrollmentController.enrollInWorkshop);
  * /api/workshop-enrollments/{id}/payment:
  *   put:
  *     summary: Update payment status (Admin)
- *     tags: [Workshop Enrollments]
+ *     tags: [Participation]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -134,9 +134,9 @@ router.put(
  * /api/workshop-enrollments/{id}/cancel:
  *   put:
  *     summary: Cancel workshop enrollment
- *     tags: [Workshop Enrollments]
+ *     tags: [Participation]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -154,9 +154,9 @@ router.put('/:id/cancel', authenticate, workshopEnrollmentController.cancelWorks
  * /api/workshop-enrollments/{id}:
  *   delete:
  *     summary: Delete workshop enrollment (Admin)
- *     tags: [Workshop Enrollments]
+ *     tags: [Participation]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id

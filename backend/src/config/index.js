@@ -56,8 +56,8 @@ const config = {
     windowMs: parseInt(process.env.AUTH_RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000,
     max: parseInt(process.env.AUTH_RATE_LIMIT_MAX_REQUESTS, 10) || 5,
   },
-  CHARGILY_API_KEY: process.env.CHARGILY_API_KEY,
-  // Loggi
+
+  // Logging
   log: {
     level: process.env.LOG_LEVEL || 'info',
   },
