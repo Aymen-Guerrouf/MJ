@@ -61,21 +61,22 @@ export default function EventView() {
     try {
       setIsRegistering(true);
 
-      const response = await apiCall(
-        `${API_ENDPOINTS.EVENTS.LIST}/${event._id || event.id}/register`,
-        {
-          method: "POST",
-        }
-      );
+      const response = await apiCall(API_ENDPOINTS.EVENTS.REGISTER, {
+        method: "POST",
+        body: JSON.stringify({
+          eventId: event._id || event.id,
+        }),
+      });
+
+      const data = await response.json();
 
       if (response.ok) {
         setIsRegistered(true);
         Alert.alert(
           "Success",
-          "You have successfully registered for this event!"
+          data.message || "You have successfully registered for this event!"
         );
       } else {
-        const data = await response.json();
         throw new Error(data.message || "Registration failed");
       }
     } catch (error) {

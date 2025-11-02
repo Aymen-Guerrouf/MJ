@@ -61,21 +61,25 @@ export default function WorkshopView() {
     try {
       setIsEnrolling(true);
 
-      const response = await apiCall(
-        `${API_ENDPOINTS.WORKSHOPS.LIST}/${workshop._id || workshop.id}/enroll`,
-        {
-          method: "POST",
-        }
-      );
+      const response = await apiCall(API_ENDPOINTS.WORKSHOPS.ENROLL, {
+        method: "POST",
+        body: JSON.stringify({
+          workshopId: workshop._id || workshop.id,
+          fullName: "User Name", // You should get this from user context/auth
+          phone: "0123456789", // You should get this from user context/auth
+          age: 25, // You should get this from user context/auth
+        }),
+      });
+
+      const data = await response.json();
 
       if (response.ok) {
         setIsEnrolled(true);
         Alert.alert(
           "Success",
-          "You have successfully enrolled in this workshop!"
+          data.message || "You have successfully enrolled in this workshop!"
         );
       } else {
-        const data = await response.json();
         throw new Error(data.message || "Enrollment failed");
       }
     } catch (error) {

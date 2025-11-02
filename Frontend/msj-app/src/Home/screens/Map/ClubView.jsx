@@ -17,7 +17,7 @@ import {
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { LinearGradient } from "expo-linear-gradient";
-import { API_ENDPOINTS, apiCall } from "../../../config/api";
+import { API_ENDPOINTS, apiCall, getUserData } from "../../../config/api";
 
 const TEAL = "rgba(107,174,151,1)";
 const MINT = "rgba(150,214,195,1)";
@@ -29,6 +29,9 @@ export default function ClubView() {
   const { params } = useRoute();
   const club = params?.club;
   const center = params?.center;
+
+  // Example: get userID from your auth store/context
+  const userID = params?.userID || "u_demo_001";
 
   const [joinOpen, setJoinOpen] = useState(false);
   const [note, setNote] = useState("");
@@ -45,15 +48,27 @@ export default function ClubView() {
   const onSubmitJoin = async () => {
     try {
       setLoading(true);
-      const res = await apiCall(API_ENDPOINTS.CLUBS.JOIN_REQUEST, {
+
+      const response = await apiCall(API_ENDPOINTS.CLUBS.JOIN, {
         method: "POST",
-        body: JSON.stringify({ clubId: club._id || club.id, note }),
+        body: JSON.stringify({
+          clubId: club._id || club.id,
+          note,
+        }),
       });
-      const data = await res.json().catch(() => null);
-      if (!res.ok) throw new Error(data?.message || "Unable to submit join request");
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.message || "Unable to join club");
+      }
+
       setJoinOpen(false);
       setNote("");
-      Alert.alert("Request sent", "Your join request has been submitted successfully.");
+      Alert.alert(
+        "Request Sent",
+        "Your join request has been submitted successfully!"
+      );
     } catch (err) {
       Alert.alert("Error", err?.message || "Failed to send request");
     } finally {

@@ -48,12 +48,18 @@ export const API_ENDPOINTS = {
   },
   EVENTS: {
     LIST: `${API_BASE_URL}/api/events`,
+    REGISTER: `${API_BASE_URL}/api/event-registrations`,
+    MY_REGISTRATIONS: `${API_BASE_URL}/api/event-registrations/my`,
   },
   WORKSHOPS: {
     LIST: `${API_BASE_URL}/api/workshops`,
+    ENROLL: `${API_BASE_URL}/api/workshop-enrollments`,
+    MY_ENROLLMENTS: `${API_BASE_URL}/api/`,
   },
   CLUBS: {
     LIST: `${API_BASE_URL}/api/clubs`,
+    JOIN: `${API_BASE_URL}/api/club-memberships/join`,
+    MY_MEMBERSHIPS: `${API_BASE_URL}/api/club-memberships/my`,
   },
   POSTS: {
     LIST: `${API_BASE_URL}/api/posts`,
@@ -61,6 +67,12 @@ export const API_ENDPOINTS = {
   VIRTUAL_SCHOOL: {
     LIST: `${API_BASE_URL}/api/virtual-school`,
     GET: (id) => `${API_BASE_URL}/api/virtual-school/${id}`,
+  },
+  EXPERIENCE: {
+    SESSIONS: `${API_BASE_URL}/api/experience-sessions`,
+    SESSION: (id) => `${API_BASE_URL}/api/experience-sessions/${id}`,
+    CARDS: `${API_BASE_URL}/api/experience-cards`,
+    CARD: (id) => `${API_BASE_URL}/api/experience-cards/${id}`,
   },
 };
 

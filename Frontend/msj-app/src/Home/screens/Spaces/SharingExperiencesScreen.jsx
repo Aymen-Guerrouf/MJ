@@ -1,21 +1,81 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Image,
   Dimensions,
+  ActivityIndicator,
+  RefreshControl,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import mockData from "../../../data/mockSpacesData.json";
+import { API_ENDPOINTS, apiCall } from "../../../config/api";
 
 const { width } = Dimensions.get("window");
 
 const SharingExperiencesScreen = () => {
   const [activeTab, setActiveTab] = useState("upcoming");
-  const { sharingExperiences } = mockData;
+  const [upcomingSessions, setUpcomingSessions] = useState([]);
+  const [pastSessions, setPastSessions] = useState([]);
+  const [cards, setCards] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+
+      // Fetch sessions
+      const sessionsResponse = await apiCall(API_ENDPOINTS.EXPERIENCE.SESSIONS);
+      const sessionsData = await sessionsResponse.json();
+
+      if (sessionsData.success) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const upcoming = [];
+        const past = [];
+
+        sessionsData.data.sessions.forEach((session) => {
+          const sessionDate = new Date(session.date);
+          sessionDate.setHours(0, 0, 0, 0);
+
+          if (sessionDate >= today) {
+            upcoming.push(session);
+          } else {
+            past.push(session);
+          }
+        });
+
+        setUpcomingSessions(upcoming);
+        setPastSessions(past);
+      }
+
+      // Fetch cards
+      const cardsResponse = await apiCall(API_ENDPOINTS.EXPERIENCE.CARDS);
+      const cardsData = await cardsResponse.json();
+
+      if (cardsData.success) {
+        setCards(cardsData.data.cards);
+      }
+    } catch (error) {
+      console.error("Error fetching experience data:", error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+  };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -29,61 +89,57 @@ const SharingExperiencesScreen = () => {
   };
 
   const getDaysUntil = (dateString) => {
-    const date = new Date(dateString);
     const today = new Date();
-    const diffTime = date - today;
+    today.setHours(0, 0, 0, 0);
+    const targetDate = new Date(dateString);
+    targetDate.setHours(0, 0, 0, 0);
+    const diffTime = targetDate - today;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
     if (diffDays === 0) return "Today";
     if (diffDays === 1) return "Tomorrow";
-    return `In ${diffDays} days`;
+    if (diffDays < 7) return `In ${diffDays} days`;
+    return formatDate(dateString);
   };
 
-  const renderUpcomingSeance = (seance) => (
-    <View key={seance.id} style={styles.seanceCard}>
+  const renderUpcomingSession = (session) => (
+    <View key={session._id} style={styles.seanceCard}>
       <View style={styles.seanceHeader}>
         <View style={styles.dateTag}>
           <Ionicons name="calendar-outline" size={14} color="#6366f1" />
-          <Text style={styles.dateText}>
-            {getDaysUntil(seance.scheduledDate)}
-          </Text>
+          <Text style={styles.dateText}>{getDaysUntil(session.date)}</Text>
         </View>
-        <View style={styles.spotsTag}>
-          <Ionicons name="people-outline" size={14} color="#10b981" />
-          <Text style={styles.spotsText}>
-            {seance.maxAttendees - seance.currentAttendees} spots left
-          </Text>
-        </View>
+        {session.tag && (
+          <View style={styles.topicTagHeader}>
+            <Text style={styles.topicTagHeaderText}>{session.tag}</Text>
+          </View>
+        )}
       </View>
 
-      <Text style={styles.seanceTitle}>{seance.title}</Text>
-      <Text style={styles.seanceDescription}>{seance.description}</Text>
-
-      <View style={styles.speakerContainer}>
-        <Image
-          source={{ uri: seance.speakerImage }}
-          style={styles.speakerImage}
-        />
-        <View style={styles.speakerInfo}>
-          <Text style={styles.speakerName}>{seance.speaker}</Text>
-          <Text style={styles.speakerBio} numberOfLines={2}>
-            {seance.speakerBio}
-          </Text>
-        </View>
-      </View>
+      <Text style={styles.seanceTitle}>{session.title}</Text>
+      {session.description && (
+        <Text style={styles.seanceDescription}>{session.description}</Text>
+      )}
 
       <View style={styles.detailsRow}>
         <View style={styles.detailItem}>
-          <Ionicons name="location-outline" size={16} color="#64748b" />
-          <Text style={styles.detailText}>{seance.location}</Text>
-        </View>
-        <View style={styles.detailItem}>
           <Ionicons name="time-outline" size={16} color="#64748b" />
-          <Text style={styles.detailText}>{seance.duration} min</Text>
+          <Text style={styles.detailText}>{session.time}</Text>
         </View>
+        {session.centerId && (
+          <View style={styles.detailItem}>
+            <Ionicons name="location-outline" size={16} color="#64748b" />
+            <Text style={styles.detailText} numberOfLines={1}>
+              {session.centerId.name || "Center"}
+            </Text>
+          </View>
+        )}
       </View>
 
       <View style={styles.seanceFooter}>
-        <Text style={styles.topicTag}>{seance.topic}</Text>
+        <Text style={styles.creatorText}>
+          By: {session.createdBy?.name || "Anonymous"}
+        </Text>
         <TouchableOpacity style={styles.registerButton}>
           <Text style={styles.registerButtonText}>Register</Text>
           <Ionicons name="arrow-forward" size={16} color="white" />
@@ -92,40 +148,54 @@ const SharingExperiencesScreen = () => {
     </View>
   );
 
-  const renderArchivedSeance = (seance) => (
-    <TouchableOpacity key={seance.id} style={styles.archiveCard}>
+  const renderArchivedCard = (card) => (
+    <TouchableOpacity key={card._id} style={styles.archiveCard}>
       <View style={styles.archiveHeader}>
         <View style={styles.playButton}>
-          <Ionicons name="play-circle" size={40} color="#6366f1" />
+          <Ionicons name="document-text" size={40} color="#6366f1" />
         </View>
         <View style={styles.archiveInfo}>
           <Text style={styles.archiveTitle} numberOfLines={2}>
-            {seance.title}
+            {card.title}
           </Text>
-          <Text style={styles.archiveSpeaker}>{seance.speaker}</Text>
-          <Text style={styles.archiveDate}>
-            {formatDate(seance.scheduledDate)}
+          <Text style={styles.archiveSpeaker}>
+            {card.createdBy?.name || "Anonymous"}
           </Text>
-        </View>
-        <View style={styles.viewsContainer}>
-          <Ionicons name="eye-outline" size={16} color="#64748b" />
-          <Text style={styles.viewsText}>{seance.views}</Text>
+          <Text style={styles.archiveDate}>{formatDate(card.createdAt)}</Text>
         </View>
       </View>
 
       <Text style={styles.archiveSummary} numberOfLines={3}>
-        {seance.summary}
+        {card.summary}
       </Text>
 
-      <View style={styles.tagsContainer}>
-        {seance.tags.map((tag, index) => (
-          <View key={index} style={styles.tag}>
-            <Text style={styles.tagText}>{tag}</Text>
+      {card.lessons && card.lessons.length > 0 && (
+        <View style={styles.lessonsPreview}>
+          <Ionicons name="bulb-outline" size={16} color="#6366f1" />
+          <Text style={styles.lessonsText}>
+            {card.lessons.length} key lessons
+          </Text>
+        </View>
+      )}
+
+      {card.tag && (
+        <View style={styles.tagsContainer}>
+          <View style={styles.tag}>
+            <Text style={styles.tagText}>{card.tag}</Text>
           </View>
-        ))}
-      </View>
+        </View>
+      )}
     </TouchableOpacity>
   );
+
+  if (loading) {
+    return (
+      <View style={[styles.container, styles.centerContent]}>
+        <ActivityIndicator size="large" color="#6366f1" />
+        <Text style={styles.loadingText}>Loading experiences...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -152,12 +222,10 @@ const SharingExperiencesScreen = () => {
               activeTab === "upcoming" && styles.activeTabText,
             ]}
           >
-            Upcoming Seances
+            Upcoming
           </Text>
           <View style={styles.badge}>
-            <Text style={styles.badgeText}>
-              {sharingExperiences.upcoming.length}
-            </Text>
+            <Text style={styles.badgeText}>{upcomingSessions.length}</Text>
           </View>
         </TouchableOpacity>
 
@@ -179,9 +247,7 @@ const SharingExperiencesScreen = () => {
             Archive
           </Text>
           <View style={styles.badge}>
-            <Text style={styles.badgeText}>
-              {sharingExperiences.archive.length}
-            </Text>
+            <Text style={styles.badgeText}>{cards.length}</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -189,11 +255,39 @@ const SharingExperiencesScreen = () => {
       <ScrollView
         style={styles.content}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={["#6366f1"]}
+          />
+        }
       >
-        {activeTab === "upcoming"
-          ? sharingExperiences.upcoming.map(renderUpcomingSeance)
-          : sharingExperiences.archive.map(renderArchivedSeance)}
+        <View style={styles.scrollContent}>
+          {activeTab === "upcoming" ? (
+            upcomingSessions.length > 0 ? (
+              upcomingSessions.map(renderUpcomingSession)
+            ) : (
+              <View style={styles.emptyState}>
+                <Ionicons name="calendar-outline" size={64} color="#cbd5e1" />
+                <Text style={styles.emptyStateTitle}>No Upcoming Sessions</Text>
+                <Text style={styles.emptyStateText}>
+                  Check back later for new experience sharing sessions
+                </Text>
+              </View>
+            )
+          ) : cards.length > 0 ? (
+            cards.map(renderArchivedCard)
+          ) : (
+            <View style={styles.emptyState}>
+              <Ionicons name="archive-outline" size={64} color="#cbd5e1" />
+              <Text style={styles.emptyStateTitle}>No Archived Content</Text>
+              <Text style={styles.emptyStateText}>
+                Past sessions and experience cards will appear here
+              </Text>
+            </View>
+          )}
+        </View>
       </ScrollView>
     </View>
   );
@@ -460,6 +554,65 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: "#475569",
     fontWeight: "500",
+  },
+  centerContent: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 16,
+    color: "#64748b",
+  },
+  topicTagHeader: {
+    backgroundColor: "#f3e8ff",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+  },
+  topicTagHeaderText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#8b5cf6",
+  },
+  creatorText: {
+    fontSize: 13,
+    color: "#64748b",
+    fontStyle: "italic",
+  },
+  lessonsPreview: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#eff6ff",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    gap: 6,
+    marginBottom: 12,
+  },
+  lessonsText: {
+    fontSize: 13,
+    color: "#6366f1",
+    fontWeight: "600",
+  },
+  emptyState: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 60,
+    paddingHorizontal: 40,
+  },
+  emptyStateTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#475569",
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  emptyStateText: {
+    fontSize: 14,
+    color: "#94a3b8",
+    textAlign: "center",
+    lineHeight: 20,
   },
 });
 
