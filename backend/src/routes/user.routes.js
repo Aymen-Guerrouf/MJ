@@ -1,7 +1,14 @@
 import express from 'express';
-import { updateUserInfo, getHomeInfo, deleteUser, getAdminDashboard , getSuperAdminDashboard } from '../controllers/userController.js';
+import {
+  updateUserInfo,
+  getHomeInfo,
+  deleteUser,
+  getAdminDashboard,
+  getSuperAdminDashboard,
+} from '../controllers/userController.js';
 import { handleChat, getChatbotInfo } from '../controllers/chatbotController.js';
-import { authenticate ,authorize} from '../middleware/auth.middleware.js';
+import { getAllSupervisors } from '../controllers/startupIdeaController.js';
+import { authenticate, authorize } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
@@ -164,7 +171,8 @@ router.patch('/updateUser', authenticate, updateUserInfo);
  */
 router.delete('/deleteUser', authenticate, deleteUser);
 
-router.get('/admin/dashboard',authenticate , authorize('center_admin'), getAdminDashboard)
-router.get('/superadmin/dashboard',authenticate , authorize('admin'), getSuperAdminDashboard)
+router.get('/admin/dashboard', authenticate, authorize('center_admin'), getAdminDashboard);
+router.get('/superadmin/dashboard', authenticate, authorize('admin'), getSuperAdminDashboard);
+router.get('/supervisors', getAllSupervisors);
 
 export default router;
