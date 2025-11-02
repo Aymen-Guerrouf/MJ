@@ -60,4 +60,10 @@ router.get('/:id', authenticate, experienceSessionController.getSession);
 // Create session (center admin only)
 router.post('/', authenticate, isCenterAdmin, experienceSessionController.createSession);
 
+// Update session (center admin only)
+router.put('/:id', authenticate, isCenterAdmin, experienceSessionController.updateSession);
+
+// Delete session (center admin only)
+router.delete('/:id', authenticate, isCenterAdmin, experienceSessionController.deleteSession);
+
 export default router;

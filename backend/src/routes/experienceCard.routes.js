@@ -53,4 +53,10 @@ router.get('/:id', authenticate, experienceCardController.getCard);
 // Create card (center admin only)
 router.post('/', authenticate, isCenterAdmin, experienceCardController.createCard);
 
+// Update card (center admin only)
+router.put('/:id', authenticate, isCenterAdmin, experienceCardController.updateCard);
+
+// Delete card (center admin only)
+router.delete('/:id', authenticate, isCenterAdmin, experienceCardController.deleteCard);
+
 export default router;
