@@ -59,8 +59,11 @@ const centerSchema = new mongoose.Schema(
   }
 );
 
-// Add index for geospatial queries
+// Add indexes for better query performance
 centerSchema.index({ latitude: 1, longitude: 1 });
+centerSchema.index({ wilaya: 1 }); // Fast filtering by wilaya
+centerSchema.index({ wilaya: 1, createdAt: -1 }); // Compound index
+centerSchema.index({ location: '2dsphere' }); // Geospatial queries
 
 // Virtual populate for clubs
 centerSchema.virtual('clubs', {

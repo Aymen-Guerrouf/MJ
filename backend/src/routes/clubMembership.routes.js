@@ -17,9 +17,9 @@ const router = express.Router();
  * /api/club-memberships:
  *   get:
  *     summary: Get all club memberships (Admin)
- *     tags: [Club Memberships]
+ *     tags: [Participation]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
  *       - in: query
  *         name: clubId
@@ -44,9 +44,9 @@ router.get('/', authenticate, isCenterAdmin, clubMembershipController.getAllClub
  * /api/club-memberships/my:
  *   get:
  *     summary: Get my club memberships
- *     tags: [Club Memberships]
+ *     tags: [Participation]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: List of my club memberships
@@ -58,7 +58,7 @@ router.get('/my', authenticate, clubMembershipController.getMyClubMemberships);
  * /api/club-memberships/club/{clubId}/members:
  *   get:
  *     summary: Get members of a club
- *     tags: [Club Memberships]
+ *     tags: [Participation]
  *     parameters:
  *       - in: path
  *         name: clubId
@@ -80,9 +80,9 @@ router.get('/club/:clubId/members', clubMembershipController.getClubMembers);
  * /api/club-memberships/join:
  *   post:
  *     summary: Join a club
- *     tags: [Club Memberships]
+ *     tags: [Participation]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -105,9 +105,9 @@ router.post('/join', authenticate, clubMembershipController.joinClub);
  * /api/club-memberships/leave/{clubId}:
  *   delete:
  *     summary: Leave a club
- *     tags: [Club Memberships]
+ *     tags: [Participation]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: clubId
@@ -125,9 +125,9 @@ router.delete('/leave/:clubId', authenticate, clubMembershipController.leaveClub
  * /api/club-memberships/{id}/role:
  *   put:
  *     summary: Update member role (Admin)
- *     tags: [Club Memberships]
+ *     tags: [Participation]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -157,9 +157,9 @@ router.put('/:id/role', authenticate, isCenterAdmin, clubMembershipController.up
  * /api/club-memberships/{id}:
  *   delete:
  *     summary: Remove member from club (Admin)
- *     tags: [Club Memberships]
+ *     tags: [Participation]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id

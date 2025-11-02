@@ -59,7 +59,7 @@ const router = express.Router();
  *                 type: string
  *     responses:
  *       201:
- *         description: Startup idea created (status: pending)
+ *         description: Startup idea created with pending status
  *   get:
  *     summary: Get all approved startup ideas
  *     tags: [Startup Space]

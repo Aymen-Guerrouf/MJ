@@ -69,4 +69,9 @@ const eventSchema = new Schema(
   { timestamps: true }
 );
 
+// Add indexes for better query performance
+eventSchema.index({ centerId: 1, date: -1 }); // Most common query
+eventSchema.index({ category: 1, date: -1 }); // Filter by category
+eventSchema.index({ status: 1, date: -1 }); // Filter by status
+
 export default mongoose.model('Event', eventSchema);
