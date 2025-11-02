@@ -8,7 +8,7 @@ const router = express.Router();
 /**
  * @swagger
  * tags:
- *   name: Event Registrations
+ *   name: Participation
  *   description: Event registration management
  */
 
@@ -17,9 +17,9 @@ const router = express.Router();
  * /api/event-registrations:
  *   get:
  *     summary: Get all event registrations (Admin)
- *     tags: [Event Registrations]
+ *     tags: [Participation]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
  *       - in: query
  *         name: eventId
@@ -40,9 +40,9 @@ router.get('/', authenticate, isCenterAdmin, eventRegistrationController.getAllE
  * /api/event-registrations/my:
  *   get:
  *     summary: Get my event registrations
- *     tags: [Event Registrations]
+ *     tags: [Participation]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: List of my event registrations
@@ -54,9 +54,9 @@ router.get('/my', authenticate, eventRegistrationController.getMyEventRegistrati
  * /api/event-registrations:
  *   post:
  *     summary: Register for an event
- *     tags: [Event Registrations]
+ *     tags: [Participation]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -65,18 +65,9 @@ router.get('/my', authenticate, eventRegistrationController.getMyEventRegistrati
  *             type: object
  *             required:
  *               - eventId
- *               - fullName
- *               - phone
- *               - age
  *             properties:
  *               eventId:
  *                 type: string
- *               fullName:
- *                 type: string
- *               phone:
- *                 type: string
- *               age:
- *                 type: number
  *     responses:
  *       201:
  *         description: Successfully registered for event
@@ -85,12 +76,12 @@ router.post('/', authenticate, eventRegistrationController.registerForEvent);
 
 /**
  * @swagger
- * /api/event-registrations/{id}/cancel:
- *   put:
- *     summary: Cancel event registration
- *     tags: [Event Registrations]
+ * /api/event-registrations/{id}:
+ *   delete:
+ *     summary: Cancel/Delete event registration
+ *     tags: [Participation]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -101,31 +92,6 @@ router.post('/', authenticate, eventRegistrationController.registerForEvent);
  *       200:
  *         description: Registration cancelled successfully
  */
-router.put('/:id/cancel', authenticate, eventRegistrationController.cancelEventRegistration);
-
-/**
- * @swagger
- * /api/event-registrations/{id}:
- *   delete:
- *     summary: Delete event registration (Admin)
- *     tags: [Event Registrations]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Registration deleted successfully
- */
-router.delete(
-  '/:id',
-  authenticate,
-  isCenterAdmin,
-  eventRegistrationController.deleteEventRegistration
-);
+router.delete('/:id', authenticate, eventRegistrationController.deleteEventRegistration);
 
 export default router;

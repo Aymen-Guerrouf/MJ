@@ -79,4 +79,9 @@ const workshopSchema = new Schema(
   { timestamps: true }
 );
 
+// Add indexes for better query performance
+workshopSchema.index({ centerId: 1, startDate: -1 }); // Most common query
+workshopSchema.index({ category: 1, startDate: -1 }); // Filter by category
+workshopSchema.index({ status: 1, startDate: -1 }); // Filter by status
+
 export default mongoose.model('Workshop', workshopSchema);
