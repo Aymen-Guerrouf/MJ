@@ -8,6 +8,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   Platform,
+  Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useForm } from "react-hook-form";
@@ -113,8 +114,12 @@ export default function SignIn() {
 
   return (
     <View style={styles.screen}>
-      {/* Mint bar */}
-      <View style={styles.mintBar} />
+      {/* Logo */}
+      <Image
+        source={require("../../assets/logo.png")}
+        style={styles.logo}
+        resizeMode="contain"
+      />
 
       {/* Headings */}
       <Text style={styles.title}>Welcome Back!</Text>
@@ -233,14 +238,11 @@ const styles = StyleSheet.create({
     paddingTop: 80,
     paddingHorizontal: 22,
   },
-  mintBar: {
+  logo: {
     alignSelf: "center",
-    width: 70,
-    height: 14,
-    borderRadius: 4,
-    backgroundColor: "#99D6BE",
-    opacity: 0.9,
-    marginBottom: 80,
+    width: 120,
+    height: 120,
+    marginBottom: 40,
   },
   title: {
     textAlign: "center",
@@ -266,7 +268,7 @@ const styles = StyleSheet.create({
     borderColor: PALE_GREEN_BORDER,
     paddingHorizontal: 12,
     height: 52,
-    marginBottom: 14,
+    marginBottom: 20,
   },
   leadingIcon: {
     width: 34,
