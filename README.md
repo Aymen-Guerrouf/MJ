@@ -73,12 +73,14 @@
 #### **Three User Roles:**
 
 1. **Standard Users**
+
    - Join clubs, events, and workshops
    - Submit startup ideas
    - Request mentorship
    - Become mentors or supervisors
 
 2. **Center Admins**
+
    - Manage a specific youth center
    - Create and moderate activities (clubs, events, workshops)
    - Review and approve memberships
@@ -91,12 +93,14 @@
 ### 🎓 Dual Mentorship System
 
 #### **Personal Mentorship**
+
 - **17 Expertise Areas:** Football, Basketball, Chess, Coding, Arts, Music, Tech, Entrepreneurship, and more
 - **Mentor Profiles:** Bio, expertise, and availability
 - **Request System:** Send and manage mentorship requests
 - **Matching Algorithm:** AI-powered mentor recommendations
 
 #### **Startup Supervision**
+
 - **26 Business Domains:** Software Development, AI/ML, Business Development, Fundraising, Marketing, Product Management, and more
 - **Supervisor Profiles:** Professional title, bio, and expertise
 - **Project Requests:** Connect entrepreneurs with experienced supervisors
@@ -185,110 +189,135 @@ The User model is the central schema managing all user types: standard users, me
 
 ### 🔑 Core Fields
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `email` | String | ✅ | Unique, lowercase, validated email |
-| `password` | String | ✅ | Min 6 chars, bcrypt hashed (salt: 10) |
-| `name` | String | ✅ | Full name |
-| `phone` | String | ❌ | Contact number |
-| `age` | Number | ✅* | Age 13-120 (*Not required for admins) |
-| `interests` | String[] | ❌ | User interests (17 options) |
-| `role` | String | ✅ | `user` \| `center_admin` \| `super_admin` |
+| Field       | Type     | Required | Description                               |
+| ----------- | -------- | -------- | ----------------------------------------- |
+| `email`     | String   | ✅       | Unique, lowercase, validated email        |
+| `password`  | String   | ✅       | Min 6 chars, bcrypt hashed (salt: 10)     |
+| `name`      | String   | ✅       | Full name                                 |
+| `phone`     | String   | ❌       | Contact number                            |
+| `age`       | Number   | ✅\*     | Age 13-120 (\*Not required for admins)    |
+| `interests` | String[] | ❌       | User interests (17 options)               |
+| `role`      | String   | ✅       | `user` \| `center_admin` \| `super_admin` |
 
 ### 🎓 Mentorship Fields
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `isMentor` | Boolean | Enables mentor status |
-| `mentorBio` | String | Max 500 characters |
-| `mentorExpertise` | String[] | 17 expertise areas |
+| Field             | Type     | Description           |
+| ----------------- | -------- | --------------------- |
+| `isMentor`        | Boolean  | Enables mentor status |
+| `mentorBio`       | String   | Max 500 characters    |
+| `mentorExpertise` | String[] | 17 expertise areas    |
 
 **Mentor Expertise Options:**
+
 ```javascript
 [
-  'football', 'basketball', 'volleyball', 'chess',
-  'arts', 'music', 'theatre', 'coding', 'gaming',
-  'education', 'volunteering', 'culture', 'tech',
-  'health', 'entrepreneurship', 'design', 'marketing', 'other'
-]
+  "football",
+  "basketball",
+  "volleyball",
+  "chess",
+  "arts",
+  "music",
+  "theatre",
+  "coding",
+  "gaming",
+  "education",
+  "volunteering",
+  "culture",
+  "tech",
+  "health",
+  "entrepreneurship",
+  "design",
+  "marketing",
+  "other",
+];
 ```
 
 ### 🚀 Supervision Fields (Startup Projects)
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `isSupervisor` | Boolean | Enables supervisor status |
-| `supervisorTitle` | String | Professional title (e.g., "CEO at StartupX") |
-| `supervisorBio` | String | Max 500 characters |
-| `supervisorExpertise` | String[] | 26 business/tech domains |
+| Field                 | Type     | Description                                  |
+| --------------------- | -------- | -------------------------------------------- |
+| `isSupervisor`        | Boolean  | Enables supervisor status                    |
+| `supervisorTitle`     | String   | Professional title (e.g., "CEO at StartupX") |
+| `supervisorBio`       | String   | Max 500 characters                           |
+| `supervisorExpertise` | String[] | 26 business/tech domains                     |
 
 **Supervisor Expertise Categories:**
 
 **Business & Strategy:**
+
 - Business Development, Strategic Planning, Operations Management, Legal & Compliance, Entrepreneurship
 
 **Technology:**
+
 - Software Development, AI & ML, Data Science, Hardware & IoT, Cybersecurity, Cloud Computing
 
 **Finance:**
+
 - Finance & Accounting, Fundraising & VC, Fintech
 
 **Marketing & Sales:**
+
 - Digital Marketing, Sales Strategy, Branding & PR
 
 **Product & Design:**
+
 - Product Management, UI/UX Design, Industrial Design
 
 **Industry-Specific:**
+
 - E-commerce, Healthtech, EdTech, Greentech, AgriTech
 
 **People:**
+
 - Human Resources, Other
 
 ### 🔐 Security Fields
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `tokenVersion` | Number | Increment to invalidate all tokens |
-| `isEmailVerified` | Boolean | Email verification status |
-| `emailVerificationCode` | String | SHA256 hashed 6-digit code (24h expiry) |
-| `resetPasswordCode` | String | SHA256 hashed 6-digit code (10min expiry) |
+| Field                   | Type    | Description                               |
+| ----------------------- | ------- | ----------------------------------------- |
+| `tokenVersion`          | Number  | Increment to invalidate all tokens        |
+| `isEmailVerified`       | Boolean | Email verification status                 |
+| `emailVerificationCode` | String  | SHA256 hashed 6-digit code (24h expiry)   |
+| `resetPasswordCode`     | String  | SHA256 hashed 6-digit code (10min expiry) |
 
 ### 🔗 Virtual Relationships
 
 ```javascript
 // Activities
-user.myClubs           // ClubMembership[]
-user.myEvents          // EventRegistration[]
-user.myWorkshops       // WorkshopEnrollment[]
+user.myClubs; // ClubMembership[]
+user.myEvents; // EventRegistration[]
+user.myWorkshops; // WorkshopEnrollment[]
 
 // Startups
-user.myStartupIdeas    // StartupIdea[] (as owner)
-user.supervisedProjects // StartupIdea[] (as supervisor)
+user.myStartupIdeas; // StartupIdea[] (as owner)
+user.supervisedProjects; // StartupIdea[] (as supervisor)
 
 // Mentorship
-user.mentorshipRequests    // MentorshipRequest[] (received as mentor)
-user.myMentorshipRequests  // MentorshipRequest[] (sent as mentee)
+user.mentorshipRequests; // MentorshipRequest[] (received as mentor)
+user.myMentorshipRequests; // MentorshipRequest[] (sent as mentee)
 
 // Supervision
-user.projectRequests       // ProjectRequest[] (received as supervisor)
-user.myProjectRequests     // ProjectRequest[] (sent as entrepreneur)
+user.projectRequests; // ProjectRequest[] (received as supervisor)
+user.myProjectRequests; // ProjectRequest[] (sent as entrepreneur)
 ```
 
 ### 🛠️ Instance Methods
 
 #### `comparePassword(candidatePassword)`
+
 ```javascript
-const isValid = await user.comparePassword('password123');
+const isValid = await user.comparePassword("password123");
 ```
 
 #### `incrementTokenVersion()`
+
 ```javascript
 // Revokes all active JWT tokens
 await user.incrementTokenVersion();
 ```
 
 #### `createPasswordResetCode()`
+
 ```javascript
 const resetCode = user.createPasswordResetCode();
 await user.save();
@@ -296,6 +325,7 @@ await user.save();
 ```
 
 #### `createEmailVerificationCode()`
+
 ```javascript
 const verificationCode = user.createEmailVerificationCode();
 await user.save();
@@ -303,6 +333,7 @@ await user.save();
 ```
 
 #### `toJSON()`
+
 ```javascript
 // Automatically removes sensitive fields
 const safeUser = user.toJSON();
@@ -312,58 +343,69 @@ const safeUser = user.toJSON();
 ### 📝 Usage Examples
 
 #### Create Standard User
+
 ```javascript
 const user = new User({
-  email: 'john@example.com',
-  password: 'securePass123',
-  name: 'John Doe',
+  email: "john@example.com",
+  password: "securePass123",
+  name: "John Doe",
   age: 25,
-  interests: ['coding', 'gaming', 'tech']
+  interests: ["coding", "gaming", "tech"],
 });
 await user.save();
 ```
 
 #### Create Mentor
+
 ```javascript
 const mentor = new User({
-  email: 'mentor@example.com',
-  password: 'securePass123',
-  name: 'Jane Smith',
+  email: "mentor@example.com",
+  password: "securePass123",
+  name: "Jane Smith",
   age: 30,
   isMentor: true,
-  mentorBio: 'Experienced software engineer with 10 years in the industry',
-  mentorExpertise: ['coding', 'tech', 'entrepreneurship']
+  mentorBio: "Experienced software engineer with 10 years in the industry",
+  mentorExpertise: ["coding", "tech", "entrepreneurship"],
 });
 await mentor.save();
 ```
 
 #### Create Supervisor
+
 ```javascript
 const supervisor = new User({
-  email: 'supervisor@example.com',
-  password: 'securePass123',
-  name: 'Alex Johnson',
+  email: "supervisor@example.com",
+  password: "securePass123",
+  name: "Alex Johnson",
   age: 35,
   isSupervisor: true,
-  supervisorTitle: 'CEO at TechStartup',
-  supervisorBio: 'Serial entrepreneur with 3 successful exits',
-  supervisorExpertise: ['Business Development', 'Fundraising & VC', 'Product Management']
+  supervisorTitle: "CEO at TechStartup",
+  supervisorBio: "Serial entrepreneur with 3 successful exits",
+  supervisorExpertise: [
+    "Business Development",
+    "Fundraising & VC",
+    "Product Management",
+  ],
 });
 await supervisor.save();
 ```
 
 #### Verify Password & Login
+
 ```javascript
-const user = await User.findOne({ email: 'john@example.com' }).select('+password');
-const isValid = await user.comparePassword('securePass123');
+const user = await User.findOne({ email: "john@example.com" }).select(
+  "+password"
+);
+const isValid = await user.comparePassword("securePass123");
 if (isValid) {
   // Generate JWT tokens
 }
 ```
 
 #### Password Reset Flow
+
 ```javascript
-const user = await User.findOne({ email: 'john@example.com' });
+const user = await User.findOne({ email: "john@example.com" });
 const resetCode = user.createPasswordResetCode();
 await user.save();
 // Email resetCode to user (expires in 10 minutes)
@@ -386,6 +428,7 @@ await user.save();
 Create `.env` files in both `backend/` and `Frontend/msj-app/`:
 
 #### Backend `.env`
+
 ```env
 # Server
 PORT=3000
@@ -421,6 +464,7 @@ FRONTEND_URL=http://localhost:5173
 ```
 
 #### Frontend `.env`
+
 ```env
 VITE_API_URL=http://localhost:3000/api
 VITE_CLOUDINARY_CLOUD_NAME=your_cloud_name
@@ -430,24 +474,28 @@ VITE_CLOUDINARY_UPLOAD_PRESET=your_upload_preset
 ### Installation
 
 1. **Clone the repository:**
+
 ```bash
 git clone https://github.com/Aymen-Guerrouf/MSJ
 cd MSJ
 ```
 
 2. **Install Backend Dependencies:**
+
 ```bash
 cd backend
 npm install
 ```
 
 3. **Install Web Frontend Dependencies:**
+
 ```bash
 cd ../web/my-vite-app
 npm install
 ```
 
 4. **Install Mobile App Dependencies:**
+
 ```bash
 cd ../../Frontend/msj-app
 npm install
@@ -456,31 +504,38 @@ npm install
 ### Running the Application
 
 #### Start Backend Server
+
 ```bash
 cd backend
 npm run dev  # Development with nodemon
 # or
 npm start    # Production
 ```
+
 Server runs on: `http://localhost:3000`
 
 #### Start Web App
+
 ```bash
 cd web/my-vite-app
 npm run dev
 ```
+
 Web app runs on: `http://localhost:5173`
 
 #### Start Mobile App
+
 ```bash
 cd Frontend/msj-app
 npm start
 ```
+
 Follow Expo CLI instructions to run on iOS/Android
 
 ### Database Setup
 
 #### Create Admin User (via MongoDB shell)
+
 ```javascript
 db.users.insertOne({
   email: "admin@msj.com",
@@ -488,7 +543,7 @@ db.users.insertOne({
   name: "Super Admin",
   role: "super_admin",
   isEmailVerified: true,
-  createdAt: new Date()
+  createdAt: new Date(),
 });
 ```
 
@@ -499,6 +554,7 @@ db.users.insertOne({
 ### API Endpoints Overview
 
 #### **Authentication**
+
 - `POST /api/auth/register` - Register new user
 - `POST /api/auth/login` - Login user
 - `POST /api/auth/refresh` - Refresh access token
@@ -508,6 +564,7 @@ db.users.insertOne({
 - `POST /api/auth/reset-password` - Reset password with code
 
 #### **Users**
+
 - `GET /api/users/me` - Get current user profile
 - `PUT /api/users/me` - Update profile
 - `GET /api/users/:id` - Get user by ID
@@ -515,12 +572,14 @@ db.users.insertOne({
 - `GET /api/users/supervisors` - Get all supervisors
 
 #### **Centers**
+
 - `GET /api/centers` - Get all centers
 - `POST /api/centers` - Create center (super_admin)
 - `GET /api/centers/:id` - Get center details
 - `PUT /api/centers/:id` - Update center (admin)
 
 #### **Clubs**
+
 - `GET /api/clubs` - Get all clubs
 - `POST /api/clubs` - Create club (admin)
 - `GET /api/clubs/:id` - Get club details
@@ -528,28 +587,33 @@ db.users.insertOne({
 - `DELETE /api/clubs/:id/leave` - Leave club
 
 #### **Events**
+
 - `GET /api/events` - Get all events
 - `POST /api/events` - Create event (admin)
 - `POST /api/events/:id/register` - Register for event
 - `DELETE /api/events/:id/unregister` - Cancel registration
 
 #### **Workshops**
+
 - `GET /api/workshops` - Get all workshops
 - `POST /api/workshops` - Create workshop (admin)
 - `POST /api/workshops/:id/enroll` - Enroll in workshop
 
 #### **Startup Ideas**
+
 - `GET /api/startups` - Get all ideas
 - `POST /api/startups` - Submit idea
 - `GET /api/startups/:id` - Get idea details
 - `PUT /api/startups/:id` - Update idea (owner)
 
 #### **Mentorship**
+
 - `POST /api/mentorship/request` - Send mentorship request
 - `GET /api/mentorship/requests` - Get my requests
 - `PUT /api/mentorship/requests/:id` - Accept/reject request
 
 #### **Supervision**
+
 - `POST /api/supervision/request` - Request supervisor
 - `GET /api/supervision/requests` - Get my requests
 - `PUT /api/supervision/requests/:id` - Accept/reject request
@@ -557,6 +621,7 @@ db.users.insertOne({
 ### Swagger Documentation
 
 Full interactive API documentation available at:
+
 ```
 http://localhost:3000/api-docs
 ```
@@ -644,11 +709,12 @@ MSJ/
 
 ```javascript
 // Example: Only admins can create clubs
-router.post('/clubs', 
-  authenticate,              // Verify JWT
-  authorize('center_admin', 'super_admin'), // Check role
-  validateClubData,          // Validate input
-  createClub                 // Controller
+router.post(
+  "/clubs",
+  authenticate, // Verify JWT
+  authorize("center_admin", "super_admin"), // Check role
+  validateClubData, // Validate input
+  createClub // Controller
 );
 ```
 
@@ -713,6 +779,7 @@ npm test
 ## 🗺️ Roadmap
 
 ### Phase 1: Core Platform ✅
+
 - [x] User authentication & authorization
 - [x] User profiles (mentors & supervisors)
 - [x] Centers, clubs, events, workshops
@@ -721,12 +788,14 @@ npm test
 - [x] Project supervision system
 
 ### Phase 2: AI & Recommendations 🚧
+
 - [x] Recombee integration
 - [ ] Advanced recommendation algorithms
 - [ ] Mentor/supervisor matching AI
 - [ ] Content personalization
 
 ### Phase 3: Enhanced Features 📋
+
 - [ ] Real-time chat (Socket.io)
 - [ ] Video conferencing integration
 - [ ] Advanced analytics dashboard
@@ -735,6 +804,7 @@ npm test
 - [ ] Gamification (badges, points, leaderboards)
 
 ### Phase 4: Scalability 🔮
+
 - [ ] Microservices architecture
 - [ ] Redis caching layer
 - [ ] GraphQL API
@@ -750,32 +820,38 @@ We welcome contributions from the community! Whether it's bug fixes, new feature
 ### How to Contribute
 
 1. **Fork the Repository**
+
    ```bash
    # Click 'Fork' on GitHub
    ```
 
 2. **Clone Your Fork**
+
    ```bash
    git clone https://github.com/YOUR_USERNAME/MSJ
    cd MSJ
    ```
 
 3. **Create Feature Branch**
+
    ```bash
    git checkout -b feature/amazing-feature
    ```
 
 4. **Make Your Changes**
+
    - Write clean, documented code
    - Follow existing code style
    - Add tests if applicable
 
 5. **Commit Your Changes**
+
    ```bash
    git commit -m "feat: add amazing feature"
    ```
 
 6. **Push to Your Fork**
+
    ```bash
    git push origin feature/amazing-feature
    ```
@@ -823,16 +899,19 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 ### Development Team
 
 - **Aymen Guerrouf** - Backend Developer
+
   - Core backend architecture and API development
   - Database design and optimization
   - Authentication & security implementation
 
 - **Chaker Lousra** - Frontend Developer
+
   - React web application development
   - React Native mobile app development
   - UI implementation and user experience
 
 - **Ilyes Mekhalfa** - AI Engineer
+
   - AI integration and recommendations system
   - Machine learning model implementation
   - Data analysis and optimization
