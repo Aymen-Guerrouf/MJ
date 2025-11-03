@@ -104,34 +104,9 @@ export const deleteUser = async (req, res) => {
 
 export const getAdminDashboard = async(req,res,next)=>{
   try {
-    const { id } = req.params;
-    const user = await User.findById(id);
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found',
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      data: user,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Failed to fetch user',
-      error: error.message,
-    });
-  }
-};
-
-export const getAdminDashboard = async (req, res) => {
-  try {
-    const userCount = await User.find({ role: 'user' }, { _id: 0, createdAt: 1 });
-    const eventCount = await Event.find({ centerId: req.user.managedCenterId });
-    const clubcount = await Club.find({ centerId: req.user.managedCenterId });
+    const userCount = await User.find({role : 'user'}, {_id :0 , createdAt :1 , });
+    const eventCount = await Event.find({centerId : req.user.managedCenterId});
+    const clubcount = await Club.find({centerId : req.user.managedCenterId});
 
     return res.status(200).json({
       userCount,
