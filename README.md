@@ -5,7 +5,7 @@ s
 <!-- HEADER STYLE: CLASSIC -->
 <div align="center">
 
-# MJ Platform
+# MJ Hackathon
 
 <em>Empowering Youth Innovation & Accelerating Impact Globally</em>
 
