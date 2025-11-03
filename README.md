@@ -1,3 +1,5 @@
+s
+
 <div id="top">
 
 <!-- HEADER STYLE: CLASSIC -->
@@ -916,7 +918,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
   - Machine learning model implementation
   - Data analysis and optimization
 
-- **Kosy Metloug** - UI/UX Designer
+- **Kosy Metlouf** - UI/UX Designer
   - User interface design
   - User experience research
   - Design system and branding
@@ -927,6 +929,18 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 We extend our sincere gratitude to the Ministry of Youth for providing this valuable opportunity for Algerian tech students and developers to participate in this national hackathon.
 Their support and initiative created the environment that made this application possible and encouraged innovation within youth centers across the country.
+
+---
+
+## 📊 Project Statistics
+
+- **Total Lines of Code:** 50,000+
+- **API Endpoints:** 80+
+- **Database Collections:** 15+
+- **Supported Expertise Areas:** 43
+- **Active Contributors:** Growing
+
+---
 
 <div align="center">
 
