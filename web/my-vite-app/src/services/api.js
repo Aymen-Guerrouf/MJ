@@ -43,7 +43,9 @@ export const logout = async () => {
 
 export const AdminDashboard = async () => {
   try {
-    const response = await API.get("/user/admin/dashboard");
+    const response = await API.get("/user/admin/dashboard", {withCredentials : true});
+    console.log(3434);
+    
     return response.data;
   } catch (error) {
     console.error("Admin dashboard error:", error);
@@ -84,6 +86,8 @@ export const getEventById = async (id) => {
 
 export const createEvent = async (eventData) => {
   try {
+    console.log(eventData);
+    
     const response = await API.post("/events", eventData);
     return response.data.data;
   } catch (error) {

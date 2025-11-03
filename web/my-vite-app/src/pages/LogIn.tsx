@@ -17,13 +17,10 @@ export default function Login() {
       const response = await login(email, password )
       console.log(response.user.role);
       
-      if (response.user.role === 'center_admin') {
-        navigate('/adminDashboard')
-      } else if (response.user.role === 'super_admin') {
+      if (response.user.role === 'super_admin') {
         navigate('/superdashboard')
       } else {
-        // Regular user
-        navigate('/') // or wherever regular users should go
+        navigate('/admindashboard')
       }
     } catch (error) {
       console.error('Login error:', error)
