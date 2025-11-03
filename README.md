@@ -3,7 +3,7 @@
 <!-- HEADER STYLE: CLASSIC -->
 <div align="center">
 
-# MSJ Platform
+# MJ Hackathon
 
 <em>Empowering Youth Innovation & Accelerating Impact Globally</em>
 
@@ -52,9 +52,9 @@
 
 ## 🎯 Overview
 
-**MSJ** is a comprehensive youth innovation and mentorship platform that connects aspiring entrepreneurs, mentors, and supervisors. The platform facilitates startup ideation, mentorship programs, community engagement through clubs/events, and provides AI-powered recommendations for personalized experiences.
+**MJ** is a comprehensive youth innovation and mentorship platform that connects aspiring entrepreneurs, mentors, and supervisors. The platform facilitates startup ideation, mentorship programs, community engagement through clubs/events, and provides AI-powered recommendations for personalized experiences.
 
-### 🌟 Why MSJ?
+### 🌟 Why MJ?
 
 - 🚀 **Youth Empowerment:** Connect young innovators with experienced mentors and supervisors
 - 💡 **Startup Ecosystem:** Share ideas, find co-founders, and get expert guidance
@@ -916,7 +916,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
   - Machine learning model implementation
   - Data analysis and optimization
 
-- **Kosy Metlouf** - UI/UX Designer
+- **Kosy Metloug** - UI/UX Designer
   - User interface design
   - User experience research
   - Design system and branding
@@ -925,24 +925,9 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ## �🙏 Acknowledgments
 
-- **MongoDB** for the robust database
-- **Express.js** for the excellent web framework
-- **React & React Native** for the powerful UI libraries
-- **Cloudinary** for media management
-- **Recombee** for AI-powered recommendations
-- **All Contributors** for making this project better
+We extend our sincere gratitude to the Ministry of Youth for providing this valuable opportunity for Algerian tech students and developers to participate in this national hackathon.
+Their support and initiative created the environment that made this application possible and encouraged innovation within youth centers across the country.
 
----
-
-## 📊 Project Statistics
-
-- **Total Lines of Code:** 50,000+
-- **API Endpoints:** 80+
-- **Database Collections:** 15+
-- **Supported Expertise Areas:** 43
-- **Active Contributors:** Growing
-
----
 
 <div align="center">
 
