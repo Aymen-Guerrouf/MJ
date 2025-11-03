@@ -2,18 +2,19 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
+  StyleSheet,
   ScrollView,
   TouchableOpacity,
   TextInput,
   ActivityIndicator,
   Alert,
   SafeAreaView,
+  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as DocumentPicker from "expo-document-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_ENDPOINTS } from "../config/api";
-import { styles } from "./AdminPanel.styles";
 
 const CATEGORIES = [
   "coding",
@@ -42,8 +43,9 @@ export default function AdminPanel({ navigation }) {
   const [category, setCategory] = useState("coding");
   const [duration, setDuration] = useState("");
 
+  // Cloudinary config
   const CLOUDINARY_CLOUD_NAME = "dvfsmezpi";
-  const CLOUDINARY_UPLOAD_PRESET = "mja-hackothon";
+  const CLOUDINARY_UPLOAD_PRESET = "mja-hackothon"; // You'll need to create this in Cloudinary
 
   useEffect(() => {
     loadUserData();
@@ -55,12 +57,6 @@ export default function AdminPanel({ navigation }) {
       if (userDataString) {
         const user = JSON.parse(userDataString);
         setUserData(user);
-        console.log("=== USER DATA LOADED ===");
-        console.log("Full user object:", user);
-        console.log("Role:", user.role);
-        console.log("managedCenterId:", user.managedCenterId);
-        console.log("center:", user.center);
-        console.log("=======================");
       }
     } catch (error) {
       console.error("Error loading user data:", error);
@@ -122,6 +118,9 @@ export default function AdminPanel({ navigation }) {
       formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
       formData.append("cloud_name", CLOUDINARY_CLOUD_NAME);
 
+      // Note: format, video_codec, audio_codec are NOT allowed in unsigned uploads
+      // These transformations will be applied via URL transformation instead
+
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`,
         {
@@ -140,6 +139,8 @@ export default function AdminPanel({ navigation }) {
         let finalUrl = data.secure_url;
 
         if (resourceType === "video") {
+          // Add transformation parameters to the URL for mobile playback
+          // Replace /upload/ with /upload/f_mp4,vc_h264,ac_aac/
           finalUrl = finalUrl.replace(
             "/upload/",
             "/upload/f_mp4,vc_h264,ac_aac,q_auto/"
@@ -214,43 +215,22 @@ export default function AdminPanel({ navigation }) {
 
       const token = await AsyncStorage.getItem("access_token");
 
-      const centerId =
-        userData?.managedCenterId || userData?.center?._id || userData?.center;
-
-      console.log("User data:", userData);
-      console.log("Center ID:", centerId);
-      console.log("Video URL:", finalVideoUrl);
-
-      const requestBody = {
-        title: title.trim(),
-        category,
-        description: description.trim() || undefined,
-        videoUrl: finalVideoUrl,
-        thumbnailUrl: finalThumbnailUrl || undefined,
-        duration: videoDuration ? parseInt(videoDuration) : undefined,
-      };
-
-      if (centerId) {
-        requestBody.centerId = centerId;
-      }
-
-      console.log("Request body:", JSON.stringify(requestBody, null, 2));
-
       const response = await fetch(API_ENDPOINTS.VIRTUAL_SCHOOL.LIST, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(requestBody),
+        body: JSON.stringify({
+          title: title.trim(),
+          category,
+          description: description.trim() || undefined,
+          videoUrl: finalVideoUrl,
+          thumbnailUrl: finalThumbnailUrl || undefined,
+          duration: videoDuration ? parseInt(videoDuration) : undefined,
+          centerId: userData?.managedCenterId || "60f7b3b3b3b3b3b3b3b3b3b3",
+        }),
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.message || `Server error: ${response.status}`
-        );
-      }
 
       const data = await response.json();
 
@@ -292,6 +272,7 @@ export default function AdminPanel({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Header */}
       <View style={styles.header}>
         <View>
           <Text style={styles.headerTitle}>Admin Panel</Text>
@@ -302,6 +283,7 @@ export default function AdminPanel({ navigation }) {
         </TouchableOpacity>
       </View>
 
+      {/* User Info */}
       {userData && (
         <View style={styles.userInfo}>
           <Ionicons name="person-circle-outline" size={32} color="#6366f1" />
@@ -313,6 +295,7 @@ export default function AdminPanel({ navigation }) {
       )}
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        {/* Instructions */}
         <View style={styles.instructionsCard}>
           <View style={styles.instructionHeader}>
             <Ionicons name="information-circle" size={24} color="#6366f1" />
@@ -332,7 +315,9 @@ export default function AdminPanel({ navigation }) {
           </Text>
         </View>
 
+        {/* Form */}
         <View style={styles.form}>
+          {/* Title */}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>
               Video Title <Text style={styles.required}>*</Text>
@@ -346,6 +331,7 @@ export default function AdminPanel({ navigation }) {
             />
           </View>
 
+          {/* Category */}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>
               Category <Text style={styles.required}>*</Text>
@@ -377,6 +363,7 @@ export default function AdminPanel({ navigation }) {
             </ScrollView>
           </View>
 
+          {/* Description */}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Description</Text>
             <TextInput
@@ -391,6 +378,7 @@ export default function AdminPanel({ navigation }) {
             />
           </View>
 
+          {/* Video URL */}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>
               Select Video <Text style={styles.required}>*</Text>
@@ -427,6 +415,7 @@ export default function AdminPanel({ navigation }) {
             />
           </View>
 
+          {/* Thumbnail URL */}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Thumbnail (Optional)</Text>
 
@@ -463,6 +452,7 @@ export default function AdminPanel({ navigation }) {
             />
           </View>
 
+          {/* Duration */}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Duration (seconds)</Text>
             <TextInput
@@ -475,6 +465,7 @@ export default function AdminPanel({ navigation }) {
             />
           </View>
 
+          {/* Submit Button */}
           <TouchableOpacity
             style={[
               styles.submitButton,
@@ -504,3 +495,208 @@ export default function AdminPanel({ navigation }) {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#f8fafc",
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "white",
+    padding: 20,
+    paddingTop: Platform.OS === "android" ? 40 : 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e2e8f0",
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#1e293b",
+  },
+  headerSubtitle: {
+    fontSize: 14,
+    color: "#64748b",
+    marginTop: 2,
+  },
+  logoutButton: {
+    padding: 8,
+  },
+  userInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#eff6ff",
+    padding: 16,
+    gap: 12,
+  },
+  userDetails: {
+    flex: 1,
+  },
+  userName: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#1e293b",
+  },
+  userRole: {
+    fontSize: 14,
+    color: "#6366f1",
+    textTransform: "capitalize",
+  },
+  content: {
+    flex: 1,
+    padding: 16,
+  },
+  instructionsCard: {
+    backgroundColor: "white",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#e0e7ff",
+  },
+  instructionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 12,
+  },
+  instructionTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#1e293b",
+  },
+  instructionText: {
+    fontSize: 14,
+    color: "#64748b",
+    marginBottom: 6,
+    paddingLeft: 8,
+  },
+  form: {
+    backgroundColor: "white",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 20,
+  },
+  inputGroup: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#1e293b",
+    marginBottom: 8,
+  },
+  required: {
+    color: "#ef4444",
+  },
+  input: {
+    backgroundColor: "#f8fafc",
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 14,
+    color: "#1e293b",
+  },
+  textArea: {
+    height: 100,
+    paddingTop: 12,
+  },
+  categoryScroll: {
+    marginTop: 4,
+  },
+  categoryChip: {
+    backgroundColor: "#f1f5f9",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    marginRight: 8,
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+  },
+  categoryChipActive: {
+    backgroundColor: "#6366f1",
+    borderColor: "#6366f1",
+  },
+  categoryChipText: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#64748b",
+    textTransform: "capitalize",
+  },
+  categoryChipTextActive: {
+    color: "white",
+  },
+  filePicker: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f8fafc",
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+    borderRadius: 8,
+    padding: 12,
+    gap: 12,
+  },
+  filePickerText: {
+    flex: 1,
+  },
+  filePickerLabel: {
+    fontSize: 14,
+    color: "#1e293b",
+    fontWeight: "500",
+  },
+  filePickerSize: {
+    fontSize: 12,
+    color: "#64748b",
+    marginTop: 2,
+  },
+  orText: {
+    textAlign: "center",
+    color: "#94a3b8",
+    fontSize: 12,
+    fontWeight: "600",
+    marginVertical: 8,
+  },
+  helperButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginTop: 8,
+    paddingVertical: 4,
+  },
+  helperButtonText: {
+    fontSize: 13,
+    color: "#6366f1",
+    fontWeight: "500",
+  },
+  submitButton: {
+    backgroundColor: "#6366f1",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    padding: 16,
+    borderRadius: 12,
+    marginTop: 10,
+  },
+  submitButtonDisabled: {
+    opacity: 0.6,
+  },
+  submitButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  uploadingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  uploadingText: {
+    color: "white",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+});

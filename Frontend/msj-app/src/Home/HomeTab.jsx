@@ -12,22 +12,16 @@ import ProfileScreen from "./screens/profile/ProfileScreen";
 import SettingsScreen from "./screens/profile/SettingsScreen";
 import ChangePasswordScreen from "./screens/profile/ChangePasswordScreen";
 import VirtualTour from "../TourView/screens/VirtualTourScreen";
-import ChatbotScreen from "./screens/Events/ChatbotScreen";
 import ClubView from "./screens/Map/ClubView";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   SpacesScreen,
   SharingExperiencesScreen,
   VirtualSchoolScreen,
+  StartupHubScreen,
   VideoPlayerScreen,
-  SparksHubScreen,
-  CreateSparkScreen,
-  MySparkScreen,
-  SparkDetailScreen,
-  SupervisorsListScreen,
-  SupervisorDetailScreen,
 } from "./screens/Spaces";
-import ExperienceStoryDetailScreen from "./screens/Spaces/sharing-exp/ExperienceStoryDetailScreen";
+import ExperienceStoryDetailScreen from "./screens/Spaces/ExperienceStoryDetailScreen";
 import Svg, {
   Path,
   Defs,
@@ -65,7 +59,6 @@ function EventsStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Events" component={Events} />
-      <Stack.Screen name="Chatbot" component={ChatbotScreen} />
       <Stack.Screen name="EventView" component={EventView} />
       <Stack.Screen name="WorkshopView" component={WorkshopView} />
     </Stack.Navigator>
@@ -98,18 +91,8 @@ function SpacesStack() {
         component={ExperienceStoryDetailScreen}
       />
       <Stack.Screen name="VirtualSchool" component={VirtualSchoolScreen} />
+      {/* <Stack.Screen name="StartupHub" component={StartupHubScreen} /> */}
       <Stack.Screen name="VideoPlayer" component={VideoPlayerScreen} />
-
-      {/* Sparks Hub */}
-      <Stack.Screen name="SparksHub" component={SparksHubScreen} />
-      <Stack.Screen name="CreateSpark" component={CreateSparkScreen} />
-      <Stack.Screen name="MySpark" component={MySparkScreen} />
-      <Stack.Screen name="SparkDetail" component={SparkDetailScreen} />
-      <Stack.Screen name="SupervisorsList" component={SupervisorsListScreen} />
-      <Stack.Screen
-        name="SupervisorDetail"
-        component={SupervisorDetailScreen}
-      />
     </Stack.Navigator>
   );
 }
@@ -134,11 +117,10 @@ export default function HomeTabs() {
           height: 115,
           backgroundColor: "transparent",
           borderTopWidth: 0,
-          elevation: 20,
+          elevation: 0,
           paddingTop: 35,
           paddingBottom: Platform.OS === "ios" ? 40 : 20,
           paddingHorizontal: 15,
-          zIndex: 9999,
         },
       }}
     >
@@ -184,19 +166,12 @@ export default function HomeTabs() {
 
 function CurvedTabBar() {
   return (
-    <View
-      style={{
-        position: "absolute",
-        width: "100%",
-        height: "100%",
-        zIndex: 9999,
-      }}
-    >
+    <View style={{ position: "absolute", width: "100%", height: "100%" }}>
       <Svg
         width={SCREEN_WIDTH}
         height={130}
         viewBox={`0 0 ${SCREEN_WIDTH} 130`}
-        style={{ position: "absolute", bottom: 0, zIndex: 10000 }}
+        style={{ position: "absolute", bottom: 0 }}
       >
         <Defs>
           <SvgLinearGradient id="gradient" x1="0" y1="0" x2="1" y2="0">
@@ -222,7 +197,6 @@ function CurvedTabBar() {
           position: "absolute",
           width: "100%",
           height: "100%",
-          zIndex: 10001,
           ...Platform.select({
             ios: {
               shadowColor: "#000",
@@ -230,7 +204,7 @@ function CurvedTabBar() {
               shadowRadius: 20,
               shadowOffset: { width: 0, height: -3 },
             },
-            android: { elevation: 20 },
+            android: { elevation: 18 },
           }),
         }}
       />

@@ -9,11 +9,7 @@
     "start": "node src/server.js",
     "lint": "eslint src/**/*.js",
     "lint:fix": "eslint src/**/*.js --fix",
-    "format": "prettier --write \"src/**/*.js\"",
-    "db:cleanup": "node scripts/cleanup-and-validate-database.js",
-    "db:populate": "node scripts/populate-arabic-data.js",
-    "db:populate-sample": "node scripts/populate-sample-data.js",
-    "db:reset": "node scripts/cleanup-and-validate-database.js && node scripts/populate-sample-data.js"
+    "format": "prettier --write \"src/**/*.js\""
   },
   "keywords": [
     "express",

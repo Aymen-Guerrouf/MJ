@@ -1,108 +1,67 @@
-// models/startupIdea.model.js
-
 import mongoose from 'mongoose';
+const { Schema } = mongoose;
 
-const startupIdeaSchema = new mongoose.Schema(
+const STARTUP_CATEGORIES = [
+  'football',
+  'basketball',
+  'volleyball',
+  'chess',
+  'arts',
+  'music',
+  'theatre',
+  'coding',
+  'gaming',
+  'education',
+  'volunteering',
+  'culture',
+  'tech',
+  'health',
+  'entrepreneurship',
+  'design',
+  'marketing',
+  'other',
+];
+
+const startupIdeaSchema = new Schema(
   {
-    // --- Basic Info ---
     title: {
       type: String,
-      required: [true, 'A project title is required.'],
+      required: [true, 'Startup title is required'],
       trim: true,
-      maxlength: [100, 'Title cannot be more than 100 characters.'],
+      maxlength: [100, 'Title cannot exceed 100 characters'],
     },
-    // The "elevator pitch"
     description: {
       type: String,
-      required: [true, 'A brief description is required.'],
-      trim: true,
-      maxlength: [500, 'Description cannot be more than 500 characters.'],
+      required: [true, 'Description is required'],
+      maxlength: [2000, 'Description cannot exceed 2000 characters'],
     },
     category: {
       type: String,
-      required: [true, 'Please select a primary category.'],
-      enum: [
-        'Technology',
-        'Education',
-        'Healthcare',
-        'Environment',
-        'Innovation',
-        'AI',
-        'Mobile',
-        'Web',
-        'Social Impact',
-        'Business',
-        'Design',
-        'Science',
-      ],
+      required: [true, 'Category is required'],
+      enum: STARTUP_CATEGORIES,
     },
-    images: [
-      {
-        type: String, // URLs from Cloudinary
-        validate: [(v) => /^https?:\/\//.test(v), 'Invalid image URL.'],
-      },
-    ],
-
-    // --- Professional Details (NEW) ---
-    problemStatement: {
-      type: String,
-      required: [true, 'Please describe the problem you are solving.'],
-      trim: true,
-      maxlength: [1000, 'Problem statement cannot exceed 1000 characters.'],
-    },
-    solution: {
-      type: String,
-      required: [true, 'Please describe your solution.'],
-      trim: true,
-      maxlength: [1000, 'Solution description cannot exceed 1000 characters.'],
-    },
-    targetMarket: {
-      type: String,
-      required: [true, 'Please describe your target customers.'],
-      trim: true,
-      maxlength: [500, 'Target market description cannot exceed 500 characters.'],
-    },
-    businessModel: {
-      type: String,
-      required: [true, 'Please describe how your project will make money.'],
-      trim: true,
-      enum: [
-        'SaaS (Subscription)',
-        'E-commerce',
-        'Marketplace',
-        'Ad-Supported',
-        'Hardware Sale',
-        'Freemium',
-        'Service-Based',
-        'Not Sure Yet',
-        'Other',
-      ],
-      default: 'Not Sure Yet',
-    },
-
-    // --- System Fields ---
     owner: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
+      required: [true, 'Owner is required'],
+      index: true,
+    },
+    center: {
+      type: Schema.Types.ObjectId,
+      ref: 'Center',
+      required: [true, 'Center is required'],
+      index: true,
     },
     status: {
       type: String,
-      enum: [
-        'pending', // The user is working on it (this is the new 'private')
-        'pending_review', // The user has sent it to a supervisor
-        'public', // Approved and on the Sparks Hub
-      ],
-      default: 'pending', // Default to 'pending'
-    },
-    supervisor: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      default: null,
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'pending',
+      index: true,
     },
     isSupported: {
       type: Boolean,
       default: false,
+      index: true,
     },
   },
   {
@@ -112,19 +71,17 @@ const startupIdeaSchema = new mongoose.Schema(
   }
 );
 
-// --- Virtual Populate for Progress Updates ---
-// This links to your `progressSnap.model.js`
-startupIdeaSchema.virtual('progressUpdates', {
+// Virtual populate for progress snaps
+startupIdeaSchema.virtual('progressSnaps', {
   ref: 'ProgressSnap',
   localField: '_id',
   foreignField: 'startupIdea',
-  options: { sort: { createdAt: -1 } }, // Show newest updates first
+  options: { sort: { createdAt: -1 } },
 });
 
-// --- Indexes ---
-startupIdeaSchema.index({ owner: 1, status: 1 }); // For "My Project"
-startupIdeaSchema.index({ status: 1, category: 1 }); // For "Sparks Hub"
-startupIdeaSchema.index({ supervisor: 1 }); // For Supervisor's dashboard
+// Index for efficient queries
+startupIdeaSchema.index({ owner: 1, center: 1 });
+startupIdeaSchema.index({ category: 1, status: 1 });
+startupIdeaSchema.index({ isSupported: 1, status: 1 });
 
-const StartupIdea = mongoose.model('StartupIdea', startupIdeaSchema);
-export default StartupIdea;
+export default mongoose.model('StartupIdea', startupIdeaSchema);
