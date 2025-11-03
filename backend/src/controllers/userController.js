@@ -14,7 +14,7 @@ export const getHomeInfo = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
   }
-};
+
 
 export const updateUserInfo = async (req, res) => {
   //get the updated Data from the request
