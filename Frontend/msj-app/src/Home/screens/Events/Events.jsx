@@ -14,10 +14,12 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { LinearGradient } from "expo-linear-gradient";
 
 import { API_ENDPOINTS, getAuthHeaders } from "../../../config/api";
 
 const TEAL = "rgba(107,174,151,1)";
+const MINT = "rgba(150,214,195,1)";
 const SLATE = "#1F2F3A";
 const LIGHT_GRAY = "#E8EDEF";
 
@@ -28,7 +30,6 @@ export default function Events() {
   const [events, setEvents] = useState([]);
   const [workshops, setWorkshops] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filterType, setFilterType] = useState("Both"); // "Events", "Workshops", or "Both"
 
   const categories = useMemo(
     () => ["All", "Design", "Culture and pr", "Sport", "Enterprise"],
@@ -104,16 +105,6 @@ export default function Events() {
   const filteredEvents = searchFilter(filterByCategory(events));
   const filteredWorkshops = searchFilter(filterByCategory(workshops));
 
-  const toggleFilterType = () => {
-    if (filterType === "Both") setFilterType("Events");
-    else if (filterType === "Events") setFilterType("Workshops");
-    else setFilterType("Both");
-  };
-
-  const shouldShowEvents = filterType === "Both" || filterType === "Events";
-  const shouldShowWorkshops =
-    filterType === "Both" || filterType === "Workshops";
-
   const formatDate = (dateString) => {
     if (!dateString) return "TBA";
     const date = new Date(dateString);
@@ -126,6 +117,22 @@ export default function Events() {
 
   return (
     <View style={styles.container}>
+      {/* Fixed AI Chatbot Button */}
+      <TouchableOpacity
+        style={styles.chatbotButton}
+        onPress={() => navigation.navigate("Chatbot")}
+        activeOpacity={0.9}
+      >
+        <LinearGradient
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          colors={[MINT, TEAL]}
+          style={styles.chatbotButtonGradient}
+        >
+          <Ionicons name="sparkles" size={28} color="#fff" />
+        </LinearGradient>
+      </TouchableOpacity>
+
       {/* Single vertical scroller for the page to avoid nested scroll bounce/gaps */}
       <ScrollView
         contentContainerStyle={styles.pageContent}
@@ -147,13 +154,6 @@ export default function Events() {
             onChangeText={setSearchQuery}
             returnKeyType="search"
           />
-          <TouchableOpacity
-            style={styles.filterIcon}
-            onPress={toggleFilterType}
-          >
-            <Ionicons name="options-outline" size={18} color={TEAL} />
-            <Text style={styles.filterTypeText}>{filterType}</Text>
-          </TouchableOpacity>
         </View>
 
         {/* Category chips (slim, inline) */}
@@ -188,36 +188,55 @@ export default function Events() {
           </View>
         ) : (
           <>
-            {shouldShowEvents &&
-              filteredEvents.map((event) => (
-                <EventCard
-                  key={event._id || event.id}
-                  event={event}
-                  navigation={navigation}
-                  formatDate={formatDate}
-                />
-              ))}
+            {/* Events Section */}
+            {filteredEvents.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Events</Text>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.horizontalList}
+                >
+                  {filteredEvents.map((event) => (
+                    <EventCard
+                      key={event._id || event.id}
+                      event={event}
+                      navigation={navigation}
+                      formatDate={formatDate}
+                    />
+                  ))}
+                </ScrollView>
+              </View>
+            )}
 
-            {shouldShowWorkshops &&
-              filteredWorkshops.map((workshop) => (
-                <WorkshopCard
-                  key={workshop._id || workshop.id}
-                  workshop={workshop}
-                  navigation={navigation}
-                  formatDate={formatDate}
-                />
-              ))}
+            {/* Workshops Section */}
+            {filteredWorkshops.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Workshops</Text>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.horizontalList}
+                >
+                  {filteredWorkshops.map((workshop) => (
+                    <WorkshopCard
+                      key={workshop._id || workshop.id}
+                      workshop={workshop}
+                      navigation={navigation}
+                      formatDate={formatDate}
+                    />
+                  ))}
+                </ScrollView>
+              </View>
+            )}
 
-            {((shouldShowEvents && filteredEvents.length === 0) ||
-              !shouldShowEvents) &&
-              ((shouldShowWorkshops && filteredWorkshops.length === 0) ||
-                !shouldShowWorkshops) && (
-                <View style={styles.emptyContainer}>
-                  <Text style={styles.emptyText}>
-                    No {filterType.toLowerCase()} found
-                  </Text>
-                </View>
-              )}
+            {filteredEvents.length === 0 && filteredWorkshops.length === 0 && (
+              <View style={styles.emptyContainer}>
+                <Text style={styles.emptyText}>
+                  No events or workshops found
+                </Text>
+              </View>
+            )}
           </>
         )}
       </ScrollView>
@@ -344,6 +363,26 @@ function WorkshopCard({ workshop, navigation, formatDate }) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff" },
 
+  // Fixed AI Chatbot Button
+  chatbotButton: {
+    position: "absolute",
+    bottom: 140,
+    right: 16,
+    zIndex: 9999,
+    elevation: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+  },
+  chatbotButtonGradient: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
   // Page content wraps everything in one vertical scroll
   pageContent: {
     paddingHorizontal: 16,
@@ -364,18 +403,6 @@ const styles = StyleSheet.create({
   },
   searchIcon: { marginRight: 8 },
   searchInput: { flex: 1, fontSize: 14, color: SLATE },
-  filterIcon: {
-    padding: 4,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-  },
-  filterTypeText: {
-    fontSize: 10,
-    fontWeight: "700",
-    color: TEAL,
-    marginLeft: 2,
-  },
 
   // Slim chips row
   chipsContainer: {
@@ -405,11 +432,26 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
+  // Sections for horizontal scrolling
+  section: {
+    marginBottom: 24,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "800",
+    color: SLATE,
+    marginBottom: 12,
+  },
+  horizontalList: {
+    paddingRight: 16,
+    gap: 16,
+  },
+
   // Cards
   card: {
     backgroundColor: "#fff",
     borderRadius: 16,
-    marginBottom: 20,
+    width: 280,
     borderWidth: 1,
     borderColor: "#D1D5DB",
     overflow: "hidden",

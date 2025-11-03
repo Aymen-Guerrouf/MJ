@@ -57,6 +57,12 @@ export default function AdminPanel({ navigation }) {
       if (userDataString) {
         const user = JSON.parse(userDataString);
         setUserData(user);
+        console.log("=== USER DATA LOADED ===");
+        console.log("Full user object:", user);
+        console.log("Role:", user.role);
+        console.log("managedCenterId:", user.managedCenterId);
+        console.log("center:", user.center);
+        console.log("=======================");
       }
     } catch (error) {
       console.error("Error loading user data:", error);
@@ -215,22 +221,46 @@ export default function AdminPanel({ navigation }) {
 
       const token = await AsyncStorage.getItem("access_token");
 
+      // Get centerId with better fallback (optional now)
+      const centerId =
+        userData?.managedCenterId || userData?.center?._id || userData?.center;
+
+      // Log for debugging
+      console.log("User data:", userData);
+      console.log("Center ID:", centerId);
+      console.log("Video URL:", finalVideoUrl);
+
+      const requestBody = {
+        title: title.trim(),
+        category,
+        description: description.trim() || undefined,
+        videoUrl: finalVideoUrl,
+        thumbnailUrl: finalThumbnailUrl || undefined,
+        duration: videoDuration ? parseInt(videoDuration) : undefined,
+      };
+
+      // Only include centerId if it exists
+      if (centerId) {
+        requestBody.centerId = centerId;
+      }
+
+      console.log("Request body:", JSON.stringify(requestBody, null, 2));
+
       const response = await fetch(API_ENDPOINTS.VIRTUAL_SCHOOL.LIST, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          title: title.trim(),
-          category,
-          description: description.trim() || undefined,
-          videoUrl: finalVideoUrl,
-          thumbnailUrl: finalThumbnailUrl || undefined,
-          duration: videoDuration ? parseInt(videoDuration) : undefined,
-          centerId: userData?.managedCenterId || "60f7b3b3b3b3b3b3b3b3b3b3",
-        }),
+        body: JSON.stringify(requestBody),
       });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || `Server error: ${response.status}`
+        );
+      }
 
       const data = await response.json();
 

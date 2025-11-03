@@ -52,6 +52,19 @@ export const createProjectRequest = async (req, res, next) => {
       });
     }
 
+    // *** CRITICAL: Check if entrepreneur already has a pending request ***
+    const existingPendingRequest = await ProjectRequest.findOne({
+      entrepreneur: req.user._id,
+      status: 'pending',
+    });
+    
+    if (existingPendingRequest) {
+      return res.status(400).json({
+        success: false,
+        message: 'You already have a pending request. You can only send one request at a time.',
+      });
+    }
+
     // Check if there's already a request for this project-supervisor pair
     const existingRequest = await ProjectRequest.findOne({
       startupIdea: project._id,
