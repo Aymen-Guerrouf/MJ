@@ -37,7 +37,7 @@ const SpacesScreen = ({ navigation }) => {
       title: "Sparks Hub",
       subtitle: "Ignite Your Innovation",
       icon: "bulb-outline",
-      gradient: ["#6BAE97", "#5A9D86", "#4A8C75"],
+      gradient: ["#17a2b8", "#138496"],
       description: "Share startup ideas & get mentored",
       screen: "SparksHub",
     },
