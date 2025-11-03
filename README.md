@@ -68,6 +68,12 @@ s
 
 ---
 
+## 🚀 Core Features
+
+### 👥 User Management System
+
+---
+
 ## � App Screenshots
 
 <div align="center">
