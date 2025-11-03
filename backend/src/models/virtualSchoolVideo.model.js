@@ -22,7 +22,7 @@ const VirtualSchoolVideoSchema = new mongoose.Schema({
   videoUrl: { type: String, required: true },
   thumbnailUrl: { type: String, default: null },
 
-  centerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Center', required: false, default: null },
+  centerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Center', required: true },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   createdAt: { type: Date, default: Date.now },
 });
