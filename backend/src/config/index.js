@@ -3,10 +3,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 console.log(process.env.JWT_SECRET);
 
-const allowedOrigins = [
-  process.env.FRONTEND_URL, // e.g. http://localhost:8081 (app)
-  process.env.WEB_URL,      // e.g. http://localhost:5173 (web)
-];
 // Validate required environment variables
 if (!process.env.JWT_SECRET) {
   throw new Error('JWT_SECRET is required in environment variables');
@@ -38,16 +34,11 @@ const config = {
   // CORS
   cors: {
     origin:
-      (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.log('❌ Blocked by CORS:', origin);
-      callback(new Error('Not allowed by CORS'));
-    }
-  }, // Allow all origins in development
+      process.env.NODE_ENV === 'production'
+        ? process.env.CORS_ORIGIN
+          ? process.env.CORS_ORIGIN.split(',')
+          : false
+        : true, // Allow all origins in development
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
