@@ -6,7 +6,7 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'MSJ Hackathon API',
+      title: 'MJ Hackathon API',
       version: '1.0.0',
       description: 'Production-ready Express API for hackathons with JWT authentication',
       contact: {
@@ -148,7 +148,7 @@ const setupSwagger = (app) => {
     swaggerUi.setup(swaggerSpec, {
       explorer: true,
       customCss: '.swagger-ui .topbar { display: none }',
-      customSiteTitle: 'MSJ API Docs',
+      customSiteTitle: 'MJ API Docs',
     })
   );
 

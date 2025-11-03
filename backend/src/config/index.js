@@ -18,7 +18,7 @@ const config = {
 
   // Database
   mongodb: {
-    uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/msj-hackathon',
+    uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/mj-hackathon',
   },
 
   // JWT

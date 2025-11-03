@@ -3,14 +3,14 @@
 <!-- HEADER STYLE: CLASSIC -->
 <div align="center">
 
-# MSJ Platform
+# MJ Platform
 
 <em>Empowering Youth Innovation & Accelerating Impact Globally</em>
 
 <!-- BADGES -->
-<img src="https://img.shields.io/github/last-commit/Aymen-Guerrouf/MSJ?style=flat&logo=git&logoColor=white&color=0080ff" alt="last-commit">
-<img src="https://img.shields.io/github/languages/top/Aymen-Guerrouf/MSJ?style=flat&color=0080ff" alt="repo-top-language">
-<img src="https://img.shields.io/github/languages/count/Aymen-Guerrouf/MSJ?style=flat&color=0080ff" alt="repo-language-count">
+<img src="https://img.shields.io/github/last-commit/Aymen-Guerrouf/MJ?style=flat&logo=git&logoColor=white&color=0080ff" alt="last-commit">
+<img src="https://img.shields.io/github/languages/top/Aymen-Guerrouf/MJ?style=flat&color=0080ff" alt="repo-top-language">
+<img src="https://img.shields.io/github/languages/count/Aymen-Guerrouf/MJ?style=flat&color=0080ff" alt="repo-language-count">
 
 <em>Built with the tools and technologies:</em>
 
@@ -52,9 +52,9 @@
 
 ## 🎯 Overview
 
-**MSJ** is a comprehensive youth innovation and mentorship platform that connects aspiring entrepreneurs, mentors, and supervisors. The platform facilitates startup ideation, mentorship programs, community engagement through clubs/events, and provides AI-powered recommendations for personalized experiences.
+**MJ** is a comprehensive youth innovation and mentorship platform that connects aspiring entrepreneurs, mentors, and supervisors. The platform facilitates startup ideation, mentorship programs, community engagement through clubs/events, and provides AI-powered recommendations for personalized experiences.
 
-### 🌟 Why MSJ?
+### 🌟 Why MJ?
 
 - 🚀 **Youth Empowerment:** Connect young innovators with experienced mentors and supervisors
 - 💡 **Startup Ecosystem:** Share ideas, find co-founders, and get expert guidance
@@ -425,7 +425,7 @@ await user.save();
 
 ### Environment Variables
 
-Create `.env` files in both `backend/` and `Frontend/msj-app/`:
+Create `.env` files in both `backend/` and `Frontend/mj-app/`:
 
 #### Backend `.env`
 
@@ -435,7 +435,7 @@ PORT=3000
 NODE_ENV=development
 
 # Database
-MONGODB_URI=mongodb://localhost:27017/msj
+MONGODB_URI=mongodb://localhost:27017/mj
 
 # JWT Secrets
 JWT_SECRET=your_super_secret_jwt_key_here
@@ -448,7 +448,7 @@ SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your_email@gmail.com
 SMTP_PASS=your_gmail_app_password
-SMTP_FROM=noreply@msjplatform.com
+SMTP_FROM=noreply@mjplatform.com
 
 # Cloudinary
 CLOUDINARY_CLOUD_NAME=your_cloud_name
@@ -476,8 +476,8 @@ VITE_CLOUDINARY_UPLOAD_PRESET=your_upload_preset
 1. **Clone the repository:**
 
 ```bash
-git clone https://github.com/Aymen-Guerrouf/MSJ
-cd MSJ
+git clone https://github.com/Aymen-Guerrouf/MJ
+cd MJ
 ```
 
 2. **Install Backend Dependencies:**
@@ -497,7 +497,7 @@ npm install
 4. **Install Mobile App Dependencies:**
 
 ```bash
-cd ../../Frontend/msj-app
+cd ../../Frontend/mj-app
 npm install
 ```
 
@@ -526,7 +526,7 @@ Web app runs on: `http://localhost:5173`
 #### Start Mobile App
 
 ```bash
-cd Frontend/msj-app
+cd Frontend/mj-app
 npm start
 ```
 
@@ -538,7 +538,7 @@ Follow Expo CLI instructions to run on iOS/Android
 
 ```javascript
 db.users.insertOne({
-  email: "admin@msj.com",
+  email: "admin@mj.com",
   password: "$2b$10$hashedPasswordHere", // Hash with bcrypt
   name: "Super Admin",
   role: "super_admin",
@@ -631,7 +631,7 @@ http://localhost:3000/api-docs
 ## 📁 Project Structure
 
 ```
-MSJ/
+MJ/
 ├── backend/
 │   ├── src/
 │   │   ├── controllers/       # Request handlers
@@ -658,7 +658,7 @@ MSJ/
 │       └── vite.config.ts
 │
 ├── Frontend/
-│   └── msj-app/
+│   └── mj-app/
 │       ├── src/
 │       │   ├── components/    # React Native components
 │       │   ├── screens/       # App screens
@@ -770,7 +770,7 @@ cd web/my-vite-app
 npm test
 
 # Mobile app tests
-cd Frontend/msj-app
+cd Frontend/mj-app
 npm test
 ```
 
@@ -828,8 +828,8 @@ We welcome contributions from the community! Whether it's bug fixes, new feature
 2. **Clone Your Fork**
 
    ```bash
-   git clone https://github.com/YOUR_USERNAME/MSJ
-   cd MSJ
+   git clone https://github.com/YOUR_USERNAME/MJ
+   cd MJ
    ```
 
 3. **Create Feature Branch**
@@ -881,10 +881,10 @@ We welcome contributions from the community! Whether it's bug fixes, new feature
 
 ## 📞 Support & Community
 
-- **💬 [Discussions](https://github.com/Aymen-Guerrouf/MSJ/discussions)**: Ask questions, share ideas
-- **🐛 [Issues](https://github.com/Aymen-Guerrouf/MSJ/issues)**: Report bugs, request features
-- **📧 Email:** support@msjplatform.com
-- **📖 [Wiki](https://github.com/Aymen-Guerrouf/MSJ/wiki)**: Detailed guides and tutorials
+- **💬 [Discussions](https://github.com/Aymen-Guerrouf/MJ/discussions)**: Ask questions, share ideas
+- **🐛 [Issues](https://github.com/Aymen-Guerrouf/MJ/issues)**: Report bugs, request features
+- **📧 Email:** support@mjplatform.com
+- **📖 [Wiki](https://github.com/Aymen-Guerrouf/MJ/wiki)**: Detailed guides and tutorials
 
 ---
 
@@ -946,7 +946,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 <div align="center">
 
-**Made with ❤️ by the MSJ Team**
+**Made with ❤️ by the MJ Team**
 
 [⬆ Back to Top](#top)
 

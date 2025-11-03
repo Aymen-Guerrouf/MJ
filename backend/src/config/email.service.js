@@ -22,7 +22,7 @@ transporter.verify((error) => {
 const sendEmail = async (options) => {
   try {
     const info = await transporter.sendMail({
-      from: process.env.GMAIL_USER || 'MSJ Hackathon <noreply@msj.com>',
+      from: process.env.GMAIL_USER || 'MJ Hackathon <noreply@mj.com>',
       to: options.email,
       subject: options.subject,
       text: options.message,
@@ -48,7 +48,7 @@ const sendEmail = async (options) => {
 const sendPasswordResetEmail = async (user, resetCode) => {
   const text = `Hi ${user.name},
 
-We received a request to reset your password for your MSJ mobile app account.
+We received a request to reset your password for your MJ mobile app account.
 
 Your password reset code is: ${resetCode}
 
@@ -56,12 +56,12 @@ Enter this code in the mobile app to reset your password.
 
 ⏱️ This code will expire in 10 minutes for security reasons.
 
-🔒 SECURITY NOTICE: Never share this code with anyone. MSJ support will never ask for your reset code.
+🔒 SECURITY NOTICE: Never share this code with anyone. MJ support will never ask for your reset code.
 
 If you did not request this password reset, you can safely ignore this email. Your password will remain unchanged.
 
 Best regards,
-The MSJ Team`;
+The MJ Team`;
 
   const html = `<!DOCTYPE html>
 <html>
@@ -92,7 +92,7 @@ The MSJ Team`;
               </p>
               
               <p style="color: #333333; font-size: 16px; line-height: 1.6; margin: 0 0 30px;">
-                We received a request to reset your password. Enter this code in the MSJ mobile app to create a new password:
+                We received a request to reset your password. Enter this code in the MJ mobile app to create a new password:
               </p>
 
               <!-- 4-Digit Code Display -->
@@ -122,7 +122,7 @@ The MSJ Team`;
             <td style="padding: 0 30px 30px;">
               <div style="background-color: #e8f5e9; border-left: 4px solid #5dab7a; padding: 15px 20px; border-radius: 6px;">
                 <p style="color: #2e7d4e; font-size: 14px; margin: 0; line-height: 1.5;">
-                  🔒 <strong>Security Notice:</strong> Never share this code with anyone. MSJ support will never ask for your reset code. If you didn't request this, please ignore this email.
+                  🔒 <strong>Security Notice:</strong> Never share this code with anyone. MJ support will never ask for your reset code. If you didn't request this, please ignore this email.
                 </p>
               </div>
             </td>
@@ -132,10 +132,10 @@ The MSJ Team`;
           <tr>
             <td style="background-color: #f1f8f4; padding: 30px; text-align: center; border-top: 1px solid #d4e8db;">
               <p style="color: #6c8876; font-size: 12px; margin: 0 0 10px;">
-                This is an automated message from MSJ Mobile App.
+                This is an automated message from MJ Mobile App.
               </p>
               <p style="color: #6c8876; font-size: 12px; margin: 0;">
-                © ${new Date().getFullYear()} MSJ. All rights reserved.
+                © ${new Date().getFullYear()} MJ. All rights reserved.
               </p>
             </td>
           </tr>
@@ -149,7 +149,7 @@ The MSJ Team`;
 
   await sendEmail({
     email: user.email,
-    subject: '🔐 Reset Your MSJ Password',
+    subject: '🔐 Reset Your MJ Password',
     message: text,
     html,
   });
@@ -158,7 +158,7 @@ The MSJ Team`;
 const sendEmailVerification = async (user, verificationCode) => {
   const text = `Hi ${user.name},
 
-Welcome to MSJ! 
+Welcome to MJ! 
 
 Your verification code is: ${verificationCode}
 
@@ -170,7 +170,7 @@ Enter this code in the mobile app to verify your email address and complete your
 If you didn't create an account, you can safely ignore this email.
 
 Best regards,
-The MSJ Team`;
+The MJ Team`;
 
   const html = `<!DOCTYPE html>
 <html>
@@ -201,7 +201,7 @@ The MSJ Team`;
               </p>
               
               <p style="color: #333333; font-size: 16px; line-height: 1.6; margin: 0 0 30px;">
-                Welcome to MSJ! Enter this verification code in the mobile app to complete your registration:
+                Welcome to MJ! Enter this verification code in the mobile app to complete your registration:
               </p>
 
               <!-- 4-Digit Code Display -->
@@ -231,7 +231,7 @@ The MSJ Team`;
             <td style="padding: 0 30px 30px;">
               <div style="background-color: #e8f5e9; border-left: 4px solid #5dab7a; padding: 15px 20px; border-radius: 6px;">
                 <p style="color: #2e7d4e; font-size: 14px; margin: 0; line-height: 1.5;">
-                  🔒 <strong>Security Notice:</strong> Never share this code with anyone. MSJ support will never ask for your verification code.
+                  🔒 <strong>Security Notice:</strong> Never share this code with anyone. MJ support will never ask for your verification code.
                 </p>
               </div>
             </td>
@@ -241,10 +241,10 @@ The MSJ Team`;
           <tr>
             <td style="background-color: #f1f8f4; padding: 30px; text-align: center; border-top: 1px solid #d4e8db;">
               <p style="color: #6c8876; font-size: 12px; margin: 0 0 10px;">
-                If you didn't create an account with MSJ, you can safely ignore this email.
+                If you didn't create an account with MJ, you can safely ignore this email.
               </p>
               <p style="color: #6c8876; font-size: 12px; margin: 0;">
-                © ${new Date().getFullYear()} MSJ. All rights reserved.
+                © ${new Date().getFullYear()} MJ. All rights reserved.
               </p>
             </td>
           </tr>
@@ -258,7 +258,7 @@ The MSJ Team`;
 
   await sendEmail({
     email: user.email,
-    subject: '✉️ Verify Your MSJ Email Address',
+    subject: '✉️ Verify Your MJ Email Address',
     message: text,
     html,
   });

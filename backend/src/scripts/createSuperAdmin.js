@@ -15,7 +15,7 @@ const createSuperAdmin = async () => {
 
     // Super admin details
     const superAdminData = {
-      email: 'admin@msj.com',
+      email: 'admin@mj.com',
       password: 'Admin@123456', // Change this to a secure password
       name: 'Super Admin',
       role: 'super_admin',
@@ -49,7 +49,7 @@ const createSuperAdmin = async () => {
     }
 
     console.log('\n📝 Login Credentials:');
-    console.log('   Email: admin@msj.com');
+    console.log('   Email: admin@mj.com');
     console.log('   Password: Admin@123456');
     console.log('\n⚠️  Please change the password after first login!');
   } catch (error) {

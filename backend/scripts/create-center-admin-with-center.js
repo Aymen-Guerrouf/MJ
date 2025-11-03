@@ -11,7 +11,7 @@ const __dirname = path.dirname(__filename);
 // Load environment variables
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/msj-hackathon';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/mj-hackathon';
 
 async function createCenterAdminWithCenter() {
   try {
@@ -20,7 +20,7 @@ async function createCenterAdminWithCenter() {
     console.log('✅ Connected to MongoDB');
 
     // Check if center admin already exists
-    const existingAdmin = await User.findOne({ email: 'centeradmin@msj.dz' });
+    const existingAdmin = await User.findOne({ email: 'centeradmin@mj.dz' });
 
     if (existingAdmin && existingAdmin.managedCenterId) {
       console.log(
@@ -48,11 +48,11 @@ async function createCenterAdminWithCenter() {
     if (!center) {
       console.log('📝 No centers found. Creating a new center...');
       center = await Center.create({
-        name: 'MSJ Center - Algiers',
+        name: 'MJ Center - Algiers',
         wilaya: 'Algiers',
         address: '123 Main Street, Algiers',
         phone: '+213 555 123 456',
-        email: 'contact@msj-algiers.dz',
+        email: 'contact@mj-algiers.dz',
         hasTour: true,
         latitude: 36.7538,
         longitude: 3.0588,
@@ -80,7 +80,7 @@ async function createCenterAdminWithCenter() {
     } else {
       console.log('📝 Creating new center admin...');
       const centerAdmin = await User.create({
-        email: 'centeradmin@msj.dz',
+        email: 'centeradmin@mj.dz',
         password: 'Admin@123456',
         name: 'Center Administrator',
         role: 'center_admin',
@@ -97,7 +97,7 @@ async function createCenterAdminWithCenter() {
     }
 
     // Fetch the final admin data
-    const admin = await User.findOne({ email: 'centeradmin@msj.dz' });
+    const admin = await User.findOne({ email: 'centeradmin@mj.dz' });
     const finalCenter = await Center.findById(admin.managedCenterId);
 
     console.log('\n=== CENTER ADMIN CREATED SUCCESSFULLY ===');

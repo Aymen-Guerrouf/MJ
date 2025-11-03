@@ -14,7 +14,7 @@ const centersData = [
     longitude: 3.0587,
     address: 'Rue Didouche Mourad, Alger',
     phone: '+213 21 00 00 00',
-    email: 'centre@msj-alger.dz',
+    email: 'centre@mj-alger.dz',
     images: ['https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1200'],
     clubs: [
       {
@@ -56,7 +56,7 @@ const centersData = [
     longitude: 3.0479,
     address: 'Bab El Oued, Alger',
     phone: '+213 21 11 22 33',
-    email: 'babeloued@msj-alger.dz',
+    email: 'babeloued@mj-alger.dz',
     images: ['https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1200'],
     clubs: [
       {
@@ -98,7 +98,7 @@ const centersData = [
     longitude: 3.081,
     address: 'Kouba, Alger',
     phone: '+213 21 44 55 66',
-    email: 'kouba@msj-alger.dz',
+    email: 'kouba@mj-alger.dz',
     images: ['https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=1200'],
     clubs: [
       {
@@ -140,7 +140,7 @@ const centersData = [
     longitude: 6.6147,
     address: 'Avenue Aouati Mostefa, Constantine',
     phone: '+213 31 77 88 99',
-    email: 'centre@msj-constantine.dz',
+    email: 'centre@mj-constantine.dz',
     images: ['https://images.unsplash.com/photo-1523217582562-09d0def993a6?q=80&w=1200'],
     hasTour: true,
     clubs: [
@@ -213,7 +213,7 @@ const centersData = [
     longitude: -0.6331,
     address: 'Boulevard de la Soummam, Oran',
     phone: '+213 41 33 44 55',
-    email: 'centre@msj-oran.dz',
+    email: 'centre@mj-oran.dz',
     images: ['https://images.unsplash.com/photo-1449824913935-59a10b8d2000?q=80&w=1200'],
     clubs: [
       {
@@ -261,11 +261,11 @@ async function seedCenters() {
     console.log('Connected to MongoDB');
 
     // Find or create a system user for creating centers/clubs/events
-    let systemUser = await User.findOne({ email: 'system@msj.dz' });
+    let systemUser = await User.findOne({ email: 'system@mj.dz' });
     if (!systemUser) {
       console.log('Creating system user...');
       systemUser = await User.create({
-        email: 'system@msj.dz',
+        email: 'system@mj.dz',
         password: 'SystemUser123!',
         name: 'System User',
         age: 30,

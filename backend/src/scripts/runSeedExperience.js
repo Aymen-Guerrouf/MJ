@@ -7,7 +7,7 @@ dotenv.config();
 const runSeed = async () => {
   try {
     // Connect to MongoDB
-    const dbUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/msj';
+    const dbUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/mj';
     await mongoose.connect(dbUri);
     // eslint-disable-next-line no-console
     console.log('📦 Connected to MongoDB');

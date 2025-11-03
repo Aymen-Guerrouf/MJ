@@ -1,5 +1,5 @@
 {
-  "name": "msj-hackathon-api",
+  "name": "mj-hackathon-api",
   "version": "1.0.0",
   "description": "Production-ready Express API template for hackathons",
   "type": "module",

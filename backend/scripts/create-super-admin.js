@@ -22,7 +22,7 @@ import User from '../src/models/user.model.js';
 
 const SUPER_ADMIN_DATA = {
   name: 'Super Admin',
-  email: 'admin@msj.dz',
+  email: 'admin@mj.dz',
   password: 'Admin@123456', // Change this after first login!
   role: 'super_admin',
   age: 30, // Age is required
@@ -33,7 +33,7 @@ const SUPER_ADMIN_DATA = {
 async function createSuperAdmin() {
   try {
     console.log('🔌 Connecting to MongoDB...');
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/msj-hackathon');
+    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/mj-hackathon');
     console.log('✅ Connected to MongoDB\n');
 
     // Check if super admin already exists

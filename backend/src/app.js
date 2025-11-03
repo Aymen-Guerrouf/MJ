@@ -62,7 +62,7 @@ setupSwagger(app);
 app.get('/', (req, res) => {
   res.json({
     success: true,
-    message: 'MSJ Hackathon API',
+    message: 'MJ Hackathon API',
     version: '1.0.0',
     docs: '/api-docs',
   });
